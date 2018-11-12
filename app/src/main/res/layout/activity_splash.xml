@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_screen">
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#870262d3"/>
+ <LinearLayout
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:gravity="center"
+     android:orientation="vertical">
+     <ImageView
+         android:background="@drawable/ic_logo"
+         android:layout_width="65dp"
+         android:layout_height="65dp" />
+     <TextView
+         android:layout_marginTop="5dp"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="SMART"
+         android:textColor="@android:color/white"
+         android:textStyle="bold"
+         android:textSize="30sp"/>
+     <TextView
+         android:layout_marginTop="1dp"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="LIBRARY"
+         android:textColor="@android:color/white"
+         android:textStyle="bold"
+         android:textSize="25sp"/>
+     <TextView
+         android:layout_marginTop="20dp"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Organisation Name"
+         android:textColor="@android:color/white"
+         android:textSize="25sp"/>
+ </LinearLayout>
+</FrameLayout>

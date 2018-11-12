@@ -1,0 +1,168 @@
+package com.ndimension.smartlibrary.activity;
+
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.ndimension.smartlibrary.R;
+import com.ndimension.smartlibrary.utility.ConstantClass;
+import com.ndimension.smartlibrary.utility.NetworkConnectionCheck;
+import com.ndimension.smartlibrary.utility.Pref;
+import com.ndimension.smartlibrary.utility.ValidationUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class LoginActivity extends AppCompatActivity {
+    private TextView tvSignUp;
+    private Button btnLogin;
+    private EditText etEmail,etPassword;
+    private Pref pref;
+    private NetworkConnectionCheck connectionCheck;
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        initialize();
+        peformAction();
+    }
+
+    private void initialize(){
+        tvSignUp = (TextView)findViewById(R.id.tvSignUp);
+        btnLogin = (Button)findViewById(R.id.btnLogin);
+
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
+
+        pref = new Pref(this);
+
+        connectionCheck = new NetworkConnectionCheck(this);
+    }
+
+    private void peformAction(){
+        tvSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+            }
+        });
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               if (ValidationUtils.isValidEmail(etEmail.getText().toString())){
+                   if (etEmail.getText().toString().length()>0){
+                       if (etPassword.getText().toString().length()>0){
+                           if (connectionCheck.isNetworkAvailable()) {
+                              callLoginMethod();
+                           }else {
+                               connectionCheck.getNetworkActiveAlert().show();
+                           }
+                       }else {
+                           etEmail.setError("Enter Password");
+                           etEmail.requestFocus();
+                       }
+                   }else {
+                       etEmail.setError("Enter Email");
+                       etEmail.requestFocus();
+                   }
+               }else {
+                   etEmail.setError("Enter Valid Email");
+                   etEmail.requestFocus();
+               }
+            }
+        });
+    }
+
+    private void callLoginMethod(){
+        final JSONObject input = new JSONObject();
+        try {
+            input.put("email",etEmail.getText().toString().trim());
+            input.put("password",etPassword.getText().toString().trim());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.d("inputLogin",input.toString());
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading..");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                ConstantClass.BASE_URL+"login/user", input, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("responseLogin", response.toString());
+
+                progressDialog.hide();
+
+                if (response.optBoolean("status")){
+                    String statusCode = response.optString("statusCode");
+                    Toast.makeText(getApplicationContext(),response.optString("message"),Toast.LENGTH_SHORT).show();
+                    try {
+                        JSONObject jsonObject = response.getJSONObject("result");
+
+                        String user_id = jsonObject.optString("user_id");
+                        pref.saveUserId(user_id);
+
+
+                        String name = jsonObject.optString("fullname");
+                        pref.saveName(name);
+
+                        String email = jsonObject.optString("email");
+                        pref.saveEmail(email);
+
+                        String phone = jsonObject.optString("phone");
+                        pref.saveMobile(phone);
+
+
+
+
+                        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                        startActivity(intent);
+                        finish();
+
+                    } catch (JSONException e) {
+
+                        e.printStackTrace();
+                    }
+                }else {
+                    String statusCode = response.optString("statusCode");
+                    Toast.makeText(getApplicationContext(),response.optString("message"),Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                progressDialog.hide();
+            }
+        });
+
+
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(20000,
+                0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(jsonObjReq);
+    }
+}

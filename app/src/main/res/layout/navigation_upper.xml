@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@android:color/white"
+    android:orientation="horizontal">
+<LinearLayout
+    android:id="@+id/llMonthly"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:gravity="center"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/tvMonthly"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="MONTHLY"
+        android:textColor="@color/colorAccent"
+        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_height="wrap_content" />
+    <View
+        android:id="@+id/vMonthly"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/colorAccent"/>
+</LinearLayout>
+    <LinearLayout
+        android:id="@+id/llQuarterly"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvQuarterly"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="QUARTERLY"
+            android:textColor="#807f80"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <View
+            android:id="@+id/vQuarterly"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorAccent"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/llYearly"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvYearly"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="YEARLY"
+            android:textColor="#807f80"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <View
+            android:id="@+id/vYearly"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorAccent"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/llOthers"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvOthers"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="OTHERS"
+            android:textColor="#807f80"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <View
+            android:id="@+id/vOthers"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorAccent"/>
+    </LinearLayout>
+</LinearLayout>
