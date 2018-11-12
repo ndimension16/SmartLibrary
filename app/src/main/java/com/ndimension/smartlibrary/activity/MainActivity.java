@@ -17,7 +17,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.ndimension.smartlibrary.R;
 import com.ndimension.smartlibrary.adapter.HomePagerAdapter;
 import com.ndimension.smartlibrary.fragment.MonthlyFragment;
@@ -209,6 +212,8 @@ public class MainActivity extends AppCompatActivity {
                 tvLogout.setTextColor(getResources().getColor(R.color.text_color));
 
                 dlMain.closeDrawer(Gravity.START);
+
+                startScanning();
             }
         });
 
@@ -240,6 +245,8 @@ public class MainActivity extends AppCompatActivity {
                 tvLogout.setTextColor(getResources().getColor(R.color.text_color));
 
                 dlMain.closeDrawer(Gravity.START);
+
+                startSharing();
             }
         });
 
@@ -397,7 +404,52 @@ public class MainActivity extends AppCompatActivity {
         fragmenttransaction.commit();
     }
 
+    private void startSharing(){
+        try {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_SUBJECT, "SmartLibrary");
+            //  String sAux = "\nDownload and earn Money\n\n";
+            //  sAux = sAux + "https://play.google.com/store/apps/details?id=com.deusexmachina.spintowin \n\n";
+            String sAux = "https://play.google.com/store/apps/details?id=com.ndimension.smartlibrary\n"+"SmartLibrary: Reader App";
+            i.putExtra(Intent.EXTRA_TEXT, sAux);
+            startActivity(Intent.createChooser(i, "Share Via"));
+        } catch (Exception e) {
+            //e.toString();
+        }
+    }
 
+    private void startScanning(){
+        IntentIntegrator integrator=new IntentIntegrator(MainActivity.this);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+
+        integrator.setPrompt("Scan");
+        integrator.setCameraId(0);
+        integrator.setBeepEnabled(false);
+        integrator.setBarcodeImageEnabled(false);
+        integrator.initiateScan();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+        if (result != null) {
+            if (result.getContents() == null) {
+                Toast.makeText(this, "You Cancelled The Scanning", Toast.LENGTH_LONG).show();
+            } else {
+                String resultNew = result.getContents();
+                Toast.makeText(getApplicationContext(),resultNew,Toast.LENGTH_LONG).show();
+                //startScanning();
+
+            }
+        }
+
+        else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 
 
 }
