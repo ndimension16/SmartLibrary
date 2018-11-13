@@ -501,6 +501,7 @@ public class MainActivity extends AppCompatActivity {
                         String book_qr_code = jsonObject.optString("book_qr_code");
                         String book_img = ConstantClass.IMAGE_URL+jsonObject.optString("book_img");
                         String book_barcode_img = ConstantClass.BARCODE_URL+jsonObject.optString("book_barcode_img");
+                        String book_category_name = jsonObject.optString("book_category_name");
 
 
 
@@ -515,7 +516,7 @@ public class MainActivity extends AppCompatActivity {
                         intent.putExtra("book_pdf_link",book_pdf_link);
                         intent.putExtra("book_qr_code",book_qr_code);
                         intent.putExtra("book_img",book_img);
-                        intent.putExtra("category","");
+                        intent.putExtra("category",book_category_name);
                         intent.putExtra("book_barcode_img",book_barcode_img);
                         startActivity(intent);
 
