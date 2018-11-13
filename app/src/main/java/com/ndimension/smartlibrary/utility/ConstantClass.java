@@ -20,7 +20,7 @@ public class ConstantClass {
     public static final String SOMETHING_WENT_WRONG = "OOPs!!! Something went wrong...";
     public static String PlacesTag = "Google Places Auto Complete";
     public static final   String BASE_URL="https://ndlprojects.com/smartlibrary/api/";
-    public static final String IMAGE_URL="https://ndlprojects.com/hrm/";
+    public static final String IMAGE_URL="https://ndlprojects.com/smartlibrary/uploads/book_image/";
     public static final String DRIVE_URL = "https://ndlprojects.com/hrm/uploads/document/resume/";
 
 

@@ -42,11 +42,11 @@
                          android:layout_width="120dp"
                          android:layout_height="25dp">
                          <TextView
+                             android:id="@+id/tv1"
                              android:singleLine="true"
                              android:textColor="@android:color/white"
                              android:layout_gravity="center"
                              android:textAlignment="center"
-                             android:text="Featured Books"
                              android:layout_width="match_parent"
                              android:layout_height="wrap_content" />
                      </LinearLayout>
@@ -54,7 +54,7 @@
 
                 </LinearLayout>
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rvFeatured"
+                    android:id="@+id/rv1"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="0.7"/>
@@ -87,11 +87,11 @@
                             android:layout_width="120dp"
                             android:layout_height="25dp">
                             <TextView
+                                android:id="@+id/tv2"
                                 android:singleLine="true"
                                 android:textColor="@android:color/white"
                                 android:layout_gravity="center"
                                 android:textAlignment="center"
-                                android:text="Statistics"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
                         </LinearLayout>
@@ -99,7 +99,7 @@
 
                 </LinearLayout>
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rvStatistics"
+                    android:id="@+id/rv2"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="0.7"/>
@@ -132,11 +132,11 @@
                             android:layout_width="120dp"
                             android:layout_height="25dp">
                             <TextView
+                                android:id="@+id/tv3"
                                 android:singleLine="true"
                                 android:textColor="@android:color/white"
                                 android:layout_gravity="center"
                                 android:textAlignment="center"
-                                android:text="Finance"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
                         </LinearLayout>
@@ -144,7 +144,7 @@
 
                 </LinearLayout>
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rvFinance"
+                    android:id="@+id/rv3"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="0.7"/>
@@ -177,11 +177,11 @@
                             android:layout_width="120dp"
                             android:layout_height="25dp">
                             <TextView
+                                android:id="@+id/tv4"
                                 android:singleLine="true"
                                 android:textColor="@android:color/white"
                                 android:layout_gravity="center"
                                 android:textAlignment="center"
-                                android:text="Science"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
                         </LinearLayout>
@@ -189,7 +189,7 @@
 
                 </LinearLayout>
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rvScience"
+                    android:id="@+id/rv4"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="0.7"/>
@@ -222,11 +222,11 @@
                             android:layout_width="120dp"
                             android:layout_height="25dp">
                             <TextView
+                                android:id="@+id/tv5"
                                 android:singleLine="true"
                                 android:textColor="@android:color/white"
                                 android:layout_gravity="center"
                                 android:textAlignment="center"
-                                android:text="Economics"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
                         </LinearLayout>
@@ -234,7 +234,7 @@
 
                 </LinearLayout>
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rvEconomics"
+                    android:id="@+id/rv5"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="0.7"/>

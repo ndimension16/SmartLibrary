@@ -2,34 +2,27 @@ package com.ndimension.smartlibrary.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.ndimension.smartlibrary.R;
 import com.ndimension.smartlibrary.activity.BookActivity;
-import com.ndimension.smartlibrary.module.ShelfModule;
+import com.ndimension.smartlibrary.module.BookModule;
+import com.squareup.picasso.Picasso;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ItemViewHolder> {
-    private ArrayList<ShelfModule> orderList;
+    private ArrayList<BookModule> orderList;
     Context context;
 
 
 
 
-    public ShelfAdapter(Context context, ArrayList<ShelfModule> orderList) {
+    public ShelfAdapter(Context context, ArrayList<BookModule> orderList) {
         this.context = context;
         this.orderList=orderList;
 
@@ -47,7 +40,16 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ItemViewHold
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, final int position) {
 
-        holder.imgShelf.setImageResource(orderList.get(position).getImage());
+        try {
+            Picasso.with(context)
+                    .load(orderList.get(position).getImg())
+                    .placeholder(R.drawable.nouser)
+                    .into(holder.imgShelf);
+        }
+        catch (IllegalArgumentException e){
+            e.printStackTrace();
+            Picasso.with(context).load(R.drawable.nouser).into(holder.imgShelf);
+        }
 
         holder.imgShelf.setOnClickListener(new View.OnClickListener() {
             @Override
