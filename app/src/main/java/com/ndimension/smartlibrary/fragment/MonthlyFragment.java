@@ -122,7 +122,8 @@ public class MonthlyFragment extends Fragment {
                                     String book_publish_date = res11.optString("book_publish_date");
                                     String book_pdf_link = res11.optString("book_pdf_link");
                                     String book_qr_code = res11.optString("book_qr_code");
-                                    bookList1.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key1));
+                                    String book_barcode_img = ConstantClass.BARCODE_URL+res11.optString("book_barcode_img");
+                                    bookList1.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key1,book_barcode_img));
                                }
 
                                shelfAdapter1 = new ShelfAdapter(getActivity(),bookList1);
@@ -146,7 +147,8 @@ public class MonthlyFragment extends Fragment {
                                    String book_publish_date = res11.optString("book_publish_date");
                                    String book_pdf_link = res11.optString("book_pdf_link");
                                    String book_qr_code = res11.optString("book_qr_code");
-                                   bookList1.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key1));
+                                   String book_barcode_img = ConstantClass.BARCODE_URL+res11.optString("book_barcode_img");
+                                   bookList1.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key1,book_barcode_img));
                                }
                                shelfAdapter1 = new ShelfAdapter(getActivity(),bookList1);
                                rv1.setAdapter(shelfAdapter1);
@@ -169,7 +171,8 @@ public class MonthlyFragment extends Fragment {
                                    String book_publish_date = res12.optString("book_publish_date");
                                    String book_pdf_link = res12.optString("book_pdf_link");
                                    String book_qr_code = res12.optString("book_qr_code");
-                                   bookList2.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key2));
+                                   String book_barcode_img = ConstantClass.BARCODE_URL+res12.optString("book_barcode_img");
+                                   bookList2.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key2,book_barcode_img));
                                }
                                shelfAdapter2 = new ShelfAdapter(getActivity(),bookList2);
                                rv2.setAdapter(shelfAdapter2);
@@ -193,7 +196,8 @@ public class MonthlyFragment extends Fragment {
                                    String book_publish_date = res11.optString("book_publish_date");
                                    String book_pdf_link = res11.optString("book_pdf_link");
                                    String book_qr_code = res11.optString("book_qr_code");
-                                   bookList1.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key1));
+                                   String book_barcode_img = ConstantClass.BARCODE_URL+res11.optString("book_barcode_img");
+                                   bookList1.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key1,book_barcode_img));
                                }
                                shelfAdapter1 = new ShelfAdapter(getActivity(),bookList1);
                                rv1.setAdapter(shelfAdapter1);
@@ -216,7 +220,8 @@ public class MonthlyFragment extends Fragment {
                                    String book_publish_date = res12.optString("book_publish_date");
                                    String book_pdf_link = res12.optString("book_pdf_link");
                                    String book_qr_code = res12.optString("book_qr_code");
-                                   bookList2.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key2));
+                                   String book_barcode_img = ConstantClass.BARCODE_URL+res12.optString("book_barcode_img");
+                                   bookList2.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key2,book_barcode_img));
                                }
                                shelfAdapter2 = new ShelfAdapter(getActivity(),bookList2);
                                rv2.setAdapter(shelfAdapter2);
@@ -240,7 +245,8 @@ public class MonthlyFragment extends Fragment {
                                    String book_publish_date = res13.optString("book_publish_date");
                                    String book_pdf_link = res13.optString("book_pdf_link");
                                    String book_qr_code = res13.optString("book_qr_code");
-                                   bookList3.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key3));
+                                   String book_barcode_img = ConstantClass.BARCODE_URL+res13.optString("book_barcode_img");
+                                   bookList3.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key3,book_barcode_img));
                                }
                                shelfAdapter3 = new ShelfAdapter(getActivity(),bookList3);
                                rv3.setAdapter(shelfAdapter3);
@@ -264,7 +270,8 @@ public class MonthlyFragment extends Fragment {
                                    String book_publish_date = res11.optString("book_publish_date");
                                    String book_pdf_link = res11.optString("book_pdf_link");
                                    String book_qr_code = res11.optString("book_qr_code");
-                                   bookList1.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key1));
+                                   String book_barcode_img = ConstantClass.BARCODE_URL+res11.optString("book_barcode_img");
+                                   bookList1.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key1,book_barcode_img));
                                }
                                shelfAdapter1 = new ShelfAdapter(getActivity(),bookList1);
                                rv1.setAdapter(shelfAdapter1);
@@ -287,7 +294,8 @@ public class MonthlyFragment extends Fragment {
                                    String book_publish_date = res12.optString("book_publish_date");
                                    String book_pdf_link = res12.optString("book_pdf_link");
                                    String book_qr_code = res12.optString("book_qr_code");
-                                   bookList2.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key2));
+                                   String book_barcode_img = ConstantClass.BARCODE_URL+res12.optString("book_barcode_img");
+                                   bookList2.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key2,book_barcode_img));
                                }
                                shelfAdapter2 = new ShelfAdapter(getActivity(),bookList2);
                                rv2.setAdapter(shelfAdapter2);
@@ -310,7 +318,8 @@ public class MonthlyFragment extends Fragment {
                                    String book_publish_date = res13.optString("book_publish_date");
                                    String book_pdf_link = res13.optString("book_pdf_link");
                                    String book_qr_code = res13.optString("book_qr_code");
-                                   bookList3.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key3));
+                                   String book_barcode_img = ConstantClass.BARCODE_URL+res13.optString("book_barcode_img");
+                                   bookList3.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key3,book_barcode_img));
                                }
                                shelfAdapter3 = new ShelfAdapter(getActivity(),bookList3);
                                rv3.setAdapter(shelfAdapter3);
@@ -332,7 +341,8 @@ public class MonthlyFragment extends Fragment {
                                    String book_publish_date = res14.optString("book_publish_date");
                                    String book_pdf_link = res14.optString("book_pdf_link");
                                    String book_qr_code = res14.optString("book_qr_code");
-                                   bookList4.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key4));
+                                   String book_barcode_img = ConstantClass.BARCODE_URL+res14.optString("book_barcode_img");
+                                   bookList4.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key4,book_barcode_img));
                                }
                                shelfAdapter4 = new ShelfAdapter(getActivity(),bookList4);
                                rv4.setAdapter(shelfAdapter4);
@@ -356,7 +366,8 @@ public class MonthlyFragment extends Fragment {
                                    String book_publish_date = res11.optString("book_publish_date");
                                    String book_pdf_link = res11.optString("book_pdf_link");
                                    String book_qr_code = res11.optString("book_qr_code");
-                                   bookList1.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key1));
+                                   String book_barcode_img = ConstantClass.BARCODE_URL+res11.optString("book_barcode_img");
+                                   bookList1.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key1,book_barcode_img));
                                }
                                shelfAdapter1 = new ShelfAdapter(getActivity(),bookList1);
                                rv1.setAdapter(shelfAdapter1);
@@ -379,7 +390,8 @@ public class MonthlyFragment extends Fragment {
                                    String book_publish_date = res12.optString("book_publish_date");
                                    String book_pdf_link = res12.optString("book_pdf_link");
                                    String book_qr_code = res12.optString("book_qr_code");
-                                   bookList2.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key2));
+                                   String book_barcode_img = ConstantClass.BARCODE_URL+res12.optString("book_barcode_img");
+                                   bookList2.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key2,book_barcode_img));
                                }
                                shelfAdapter2 = new ShelfAdapter(getActivity(),bookList2);
                                rv2.setAdapter(shelfAdapter2);
@@ -402,7 +414,8 @@ public class MonthlyFragment extends Fragment {
                                    String book_publish_date = res13.optString("book_publish_date");
                                    String book_pdf_link = res13.optString("book_pdf_link");
                                    String book_qr_code = res13.optString("book_qr_code");
-                                   bookList3.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key3));
+                                   String book_barcode_img = ConstantClass.BARCODE_URL+res13.optString("book_barcode_img");
+                                   bookList3.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key3,book_barcode_img));
                                }
                                shelfAdapter3 = new ShelfAdapter(getActivity(),bookList3);
                                rv3.setAdapter(shelfAdapter3);
@@ -424,7 +437,8 @@ public class MonthlyFragment extends Fragment {
                                    String book_publish_date = res14.optString("book_publish_date");
                                    String book_pdf_link = res14.optString("book_pdf_link");
                                    String book_qr_code = res14.optString("book_qr_code");
-                                   bookList4.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key4));
+                                   String book_barcode_img = ConstantClass.BARCODE_URL+res14.optString("book_barcode_img");
+                                   bookList4.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key4,book_barcode_img));
                                }
                                shelfAdapter4 = new ShelfAdapter(getActivity(),bookList4);
                                rv4.setAdapter(shelfAdapter4);
@@ -446,7 +460,8 @@ public class MonthlyFragment extends Fragment {
                                    String book_publish_date = res15.optString("book_publish_date");
                                    String book_pdf_link = res15.optString("book_pdf_link");
                                    String book_qr_code = res15.optString("book_qr_code");
-                                   bookList5.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key5));
+                                   String book_barcode_img = ConstantClass.BARCODE_URL+res15.optString("book_barcode_img");
+                                   bookList5.add(new BookModule(book_id,book_title,book_img,book_content,book_author,book_publish_date,book_pdf_link,book_qr_code,key5,book_barcode_img));
                                }
                                shelfAdapter5 = new ShelfAdapter(getActivity(),bookList5);
                                rv5.setAdapter(shelfAdapter5);

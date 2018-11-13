@@ -1,12 +1,26 @@
 package com.ndimension.smartlibrary.activity;
 
+import android.Manifest;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,20 +30,56 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.gun0912.tedpermission.PermissionListener;
 import com.ndimension.smartlibrary.R;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class BookActivity extends AppCompatActivity {
     private Toolbar toolbar;
-    private ImageView imgQrCode;
+    private ImageView imgQrCode,imgBook;
     private Button btnFeedback;
-    private AlertDialog alertDialog;
+    private AlertDialog alertDialog,alertDialog2;
+    private TextView tvTitle,tvAuthor,tvPublish,tvCategory;
+    private EditText etContent;
+    private String flag="";
+    private String book_id="";
+    private String book_pdf_link = "";
+    private String book_qr_code = "";
+    String barcode_img="";
+    public static final int Progress_Dialog_Progress = 0;
+    URL url;
+    URLConnection urlconnection ;
+    int FileSize;
+    InputStream inputstream;
+    OutputStream outputstream;
+    byte dataArray[] = new byte[1024];
+    long totalSize = 0;
+    ProgressDialog progressdialog;
+    LinearLayout llMain;
+    String text;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,9 +97,20 @@ public class BookActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         imgQrCode = (ImageView) findViewById(R.id.imgQrCode);
+        imgBook = findViewById(R.id.imgBook);
+
+        tvTitle = findViewById(R.id.tvTitle);
+        tvAuthor = findViewById(R.id.tvAuthor);
+        tvCategory = findViewById(R.id.tvCategory);
+        tvPublish = findViewById(R.id.tvPublish);
+
+        etContent = findViewById(R.id.etContent);
+
         btnFeedback = (Button)findViewById(R.id.btnFeedback);
 
-        QRCodeWriter writer = new QRCodeWriter();
+        llMain = (LinearLayout)findViewById(R.id.llMain);
+
+     /*   QRCodeWriter writer = new QRCodeWriter();
         try {
             BitMatrix bitMatrix = writer.encode("NDimensionLabs", BarcodeFormat.QR_CODE, 512, 512);
             int width = bitMatrix.getWidth();
@@ -64,6 +125,46 @@ public class BookActivity extends AppCompatActivity {
 
         } catch (WriterException e) {
             e.printStackTrace();
+        }*/
+
+        if (getIntent().getExtras()!=null){
+            flag = getIntent().getStringExtra("flag");
+            if (flag.equals("normal")){
+                book_id = getIntent().getStringExtra("book_id");
+                tvTitle.setText(getIntent().getStringExtra("book_title"));
+                tvCategory.setText("Category: "+getIntent().getStringExtra("category"));
+                tvAuthor.setText("Author :"+getIntent().getStringExtra("book_author"));
+                tvPublish.setText("Originally published "+getIntent().getStringExtra("book_publish_date"));
+
+                etContent.setText(Html.fromHtml(getIntent().getStringExtra("book_content")).toString());
+                book_pdf_link = getIntent().getStringExtra("book_pdf_link");
+
+                barcode_img = getIntent().getStringExtra("book_barcode_img");
+                book_qr_code = getIntent().getStringExtra("book_qr_code");
+                Log.d("SoumyaQrcode",book_qr_code);
+
+                try {
+                    Picasso.with(this)
+                            .load(getIntent().getStringExtra("book_img"))
+                            .placeholder(R.drawable.no_img)
+                            .into(imgBook);
+                }
+                catch (IllegalArgumentException e){
+                    e.printStackTrace();
+                    Picasso.with(this).load(R.drawable.no_img).into(imgBook);
+                }
+
+                try {
+                    Picasso.with(this)
+                            .load(getIntent().getStringExtra("book_barcode_img"))
+                            .placeholder(R.drawable.no_img)
+                            .into(imgQrCode);
+                }
+                catch (IllegalArgumentException e){
+                    e.printStackTrace();
+                    Picasso.with(this).load(R.drawable.no_img).into(imgQrCode);
+                }
+            }
         }
     }
 
@@ -79,6 +180,13 @@ public class BookActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 showPopup();
+            }
+        });
+
+        imgQrCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showBarcodePopup();
             }
         });
     }
@@ -129,5 +237,192 @@ public class BookActivity extends AppCompatActivity {
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         window.setGravity(Gravity.CENTER);
         alertDialog.show();
+    }
+
+    private void showBarcodePopup(){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(BookActivity.this, R.style.CustomDialogNew);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_barcode, null);
+        TextView tvCancel = (TextView) dialogView.findViewById(R.id.tvCancel);
+        TextView tvShare = (TextView) dialogView.findViewById(R.id.tvShare);
+        TextView tvDownload = (TextView) dialogView.findViewById(R.id.tvDownload);
+
+        tvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+
+        tvShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+                Picasso.with(getApplicationContext()).load(barcode_img).into(new Target() {
+                    @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        share(bitmap);
+
+                    }
+                    @Override public void onBitmapFailed(Drawable errorDrawable) { }
+                    @Override public void onPrepareLoad(Drawable placeHolderDrawable) { }
+                });
+
+            }
+        });
+
+        tvDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+                new ImageDownloadWithProgressDialog().execute(barcode_img);
+
+            }
+        });
+
+
+        dialogBuilder.setView(dialogView);
+        alertDialog = dialogBuilder.create();
+        alertDialog.setCancelable(true);
+        Window window = alertDialog.getWindow();
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        alertDialog.show();
+    }
+
+    private void share(Bitmap bitmap){
+        PackageManager pm = getPackageManager();
+
+        try {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bitmap, "Title", null);
+            Uri imageUri = Uri.parse(path);
+          //  PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
+
+
+            Intent waIntent = new Intent(Intent.ACTION_SEND);
+            waIntent.setType("*/*");
+           // waIntent.setPackage("com.whatsapp");
+            waIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            waIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+            startActivity(waIntent);
+
+        } catch (Exception e) {
+            Log.e("Error on sharing", e + " ");
+            Toast.makeText(this, "Sharings App not Installed", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public class ImageDownloadWithProgressDialog extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+
+            showDialog(Progress_Dialog_Progress);
+        }
+
+        @Override
+        protected String doInBackground(String... aurl) {
+
+            int count;
+
+            try {
+                /*String rootDir = Environment.getExternalStorageDirectory()
+                        + File.separator + "WhatsAppStatus/Image";*/
+                String rootDir = Environment.getExternalStorageDirectory()
+                        + File.separator + "SmartLibrary/barcode";
+                File rootFile = new File(rootDir);
+                rootFile.mkdir();
+
+
+                url = new URL(aurl[0]);
+                urlconnection = url.openConnection();
+                urlconnection.connect();
+
+                FileSize = urlconnection.getContentLength();
+
+                inputstream = new BufferedInputStream(url.openStream(),8192);
+                outputstream = new FileOutputStream(new File(rootFile, book_qr_code+".jpg"));
+
+
+                while ((count = inputstream.read(dataArray)) != -1) {
+
+                    totalSize += count;
+
+                    publishProgress(""+(int)((totalSize*100)/FileSize));
+
+                    outputstream.write(dataArray, 0, count);
+                }
+
+                outputstream.flush();
+                outputstream.close();
+                inputstream.close();
+
+            } catch (Exception e) {}
+            return null;
+
+        }
+        protected void onProgressUpdate(final String... progress) {
+            progressdialog.setProgress(Integer.parseInt(progress[0]));
+
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String unused) {
+
+            dismissDialog(Progress_Dialog_Progress);
+
+            showAlert("1");
+        }
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+            case Progress_Dialog_Progress:
+
+                progressdialog = new ProgressDialog(BookActivity.this);
+                progressdialog.setMessage("Downloading Barcode From Server...");
+                progressdialog.setMax(100);
+                progressdialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progressdialog.setCancelable(false);
+                progressdialog.show();
+                return progressdialog;
+
+            default:
+
+                return null;
+        }
+    }
+
+    private long generateReferCode() {
+        Random random = new Random(System.nanoTime());
+
+        int randomInt = random.nextInt(1000000000);
+        return randomInt;
+    }
+
+    private void showAlert(String type){
+        if(type.equals("1")){
+            text = "Barcode Image Downloaded In Your Internal Memory SmartLibrary folder";
+        }
+        Snackbar snackbar = Snackbar.make(llMain, text, Snackbar.LENGTH_LONG)
+                .setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                    }
+                });
+        // Changing message text color
+        snackbar.setActionTextColor(Color.RED);
+
+
+        View sbView = snackbar.getView();
+        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        snackbar.show();
     }
 }

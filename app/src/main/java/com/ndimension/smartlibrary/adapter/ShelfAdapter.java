@@ -43,18 +43,30 @@ public class ShelfAdapter extends RecyclerView.Adapter<ShelfAdapter.ItemViewHold
         try {
             Picasso.with(context)
                     .load(orderList.get(position).getImg())
-                    .placeholder(R.drawable.nouser)
+                    .placeholder(R.drawable.no_img)
                     .into(holder.imgShelf);
         }
         catch (IllegalArgumentException e){
             e.printStackTrace();
-            Picasso.with(context).load(R.drawable.nouser).into(holder.imgShelf);
+            Picasso.with(context).load(R.drawable.no_img).into(holder.imgShelf);
         }
 
         holder.imgShelf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context.startActivity(new Intent(context, BookActivity.class));
+                Intent intent = new Intent(context,BookActivity.class);
+                intent.putExtra("flag","normal");
+                intent.putExtra("book_id",orderList.get(position).getId());
+                intent.putExtra("book_title",orderList.get(position).getName());
+                intent.putExtra("book_content",orderList.get(position).getBook_content());
+                intent.putExtra("book_author",orderList.get(position).getBook_author());
+                intent.putExtra("book_publish_date",orderList.get(position).getBook_publish_date());
+                intent.putExtra("book_pdf_link",orderList.get(position).getBook_pdf_link());
+                intent.putExtra("book_qr_code",orderList.get(position).getBook_qr_code());
+                intent.putExtra("book_img",orderList.get(position).getImg());
+                intent.putExtra("category",orderList.get(position).getKey());
+                intent.putExtra("book_barcode_img",orderList.get(position).getBarcode_img());
+                context.startActivity(intent);
             }
         });
 

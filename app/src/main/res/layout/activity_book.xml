@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/llMain">
 <include
     layout="@layout/toolbar"
     android:id="@+id/toolbar"/>
@@ -99,6 +100,7 @@
                                     android:scaleType="fitXY"
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
+                                    android:id="@+id/imgBook"
                                     android:src="@drawable/demo_book"
                                     android:layout_weight="0.75"/>
                                 <LinearLayout
@@ -151,6 +153,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent">
                                     <TextView
+                                        android:id="@+id/tvTitle"
                                         android:textStyle="bold"
                                         android:textSize="16sp"
                                         android:textColor="#5a5a5a"
@@ -164,12 +167,14 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="0.5dp"/>
                                     <TextView
+                                        android:id="@+id/tvPublish"
                                         android:textColor="#5c5c5c"
                                         android:textSize="12sp"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:text="Originally published 27 Mar,2018"/>
                                     <TextView
+                                        android:id="@+id/tvAuthor"
                                         android:textColor="#949393"
                                         android:textSize="12sp"
                                         android:singleLine="true"
@@ -177,6 +182,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="Author : Ahmed Habib"/>
                                     <TextView
+                                        android:id="@+id/tvCategory"
                                         android:textColor="#949393"
                                         android:singleLine="true"
                                         android:textSize="12sp"
@@ -184,6 +190,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="Cenre : Biography"/>
                                     <TextView
+                                        android:visibility="gone"
                                         android:textColor="#949393"
                                         android:textSize="12sp"
                                         android:layout_width="match_parent"
@@ -204,6 +211,8 @@
                         android:layout_height="match_parent"
                         android:fillViewport="true">
                         <EditText
+                            android:gravity="start"
+                            android:id="@+id/etContent"
                             android:clickable="false"
                             android:editable="false"
                             android:textColor="#3b3b3b"
