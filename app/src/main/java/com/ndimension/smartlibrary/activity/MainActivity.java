@@ -1,5 +1,6 @@
 package com.ndimension.smartlibrary.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -12,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,12 +21,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.ndimension.smartlibrary.R;
 import com.ndimension.smartlibrary.adapter.HomePagerAdapter;
 import com.ndimension.smartlibrary.fragment.MonthlyFragment;
+import com.ndimension.smartlibrary.utility.ConstantClass;
 import com.ndimension.smartlibrary.utility.Pref;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -440,7 +453,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "You Cancelled The Scanning", Toast.LENGTH_LONG).show();
             } else {
                 String resultNew = result.getContents();
-                Toast.makeText(getApplicationContext(),resultNew,Toast.LENGTH_LONG).show();
+                callScanningMethod(resultNew);
                 //startScanning();
 
             }
@@ -449,6 +462,89 @@ public class MainActivity extends AppCompatActivity {
         else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    private void callScanningMethod(String qr_code){
+        final JSONObject input = new JSONObject();
+        try {
+            input.put("qr_code",qr_code);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.d("inputCallScanning",input.toString());
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading..");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                ConstantClass.BASE_URL+"book/bookscandetails", input, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("responseCallScanning", response.toString());
+
+                progressDialog.hide();
+
+                if (response.optBoolean("status")){
+                    String statusCode = response.optString("statusCode");
+                    Toast.makeText(getApplicationContext(),response.optString("message"),Toast.LENGTH_SHORT).show();
+                    try {
+                        JSONObject jsonObject = response.getJSONObject("result");
+                        String book_id = jsonObject.optString("book_id");
+                        String book_title = jsonObject.optString("book_title");
+                        String book_content = jsonObject.optString("book_content");
+                        String book_author = jsonObject.optString("book_author");
+                        String book_publish_date = jsonObject.optString("book_publish_date");
+                        String book_pdf_link = jsonObject.optString("book_pdf_link");
+                        String book_qr_code = jsonObject.optString("book_qr_code");
+                        String book_img = ConstantClass.IMAGE_URL+jsonObject.optString("book_img");
+                        String book_barcode_img = ConstantClass.BARCODE_URL+jsonObject.optString("book_barcode_img");
+
+
+
+
+                        Intent intent = new Intent(MainActivity.this,BookActivity.class);
+                        intent.putExtra("flag","normal");
+                        intent.putExtra("book_id",book_id);
+                        intent.putExtra("book_title",book_title);
+                        intent.putExtra("book_content",book_content);
+                        intent.putExtra("book_author",book_author);
+                        intent.putExtra("book_publish_date",book_publish_date);
+                        intent.putExtra("book_pdf_link",book_pdf_link);
+                        intent.putExtra("book_qr_code",book_qr_code);
+                        intent.putExtra("book_img",book_img);
+                        intent.putExtra("category","");
+                        intent.putExtra("book_barcode_img",book_barcode_img);
+                        startActivity(intent);
+
+
+                    } catch (JSONException e) {
+
+                        e.printStackTrace();
+                    }
+                }else {
+                    String statusCode = response.optString("statusCode");
+                    Toast.makeText(getApplicationContext(),response.optString("message"),Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                progressDialog.hide();
+            }
+        });
+
+
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(20000,
+                0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(jsonObjReq);
     }
 
 
