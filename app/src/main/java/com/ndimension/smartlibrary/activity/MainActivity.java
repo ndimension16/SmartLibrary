@@ -33,6 +33,9 @@ import com.google.zxing.integration.android.IntentResult;
 import com.ndimension.smartlibrary.R;
 import com.ndimension.smartlibrary.adapter.HomePagerAdapter;
 import com.ndimension.smartlibrary.fragment.MonthlyFragment;
+import com.ndimension.smartlibrary.fragment.OthersFragment;
+import com.ndimension.smartlibrary.fragment.QuarterlyFragment;
+import com.ndimension.smartlibrary.fragment.YearlyFragment;
 import com.ndimension.smartlibrary.utility.ConstantClass;
 import com.ndimension.smartlibrary.utility.Pref;
 
@@ -362,7 +365,7 @@ public class MainActivity extends AppCompatActivity {
                 vYearly.setVisibility(View.INVISIBLE);
                 vOthers.setVisibility(View.INVISIBLE);
 
-                loadState();
+                loadState2();
 
 
             }
@@ -381,7 +384,7 @@ public class MainActivity extends AppCompatActivity {
                 vYearly.setVisibility(View.VISIBLE);
                 vOthers.setVisibility(View.INVISIBLE);
 
-                loadState();
+                loadState3();
 
 
             }
@@ -400,7 +403,7 @@ public class MainActivity extends AppCompatActivity {
                 vYearly.setVisibility(View.INVISIBLE);
                 vOthers.setVisibility(View.VISIBLE);
 
-                loadState();
+                loadState4();
 
 
             }
@@ -414,6 +417,30 @@ public class MainActivity extends AppCompatActivity {
         MonthlyFragment cf=new MonthlyFragment();
         fragmenttransaction.setCustomAnimations(R.anim.slide_from_right,R.anim.slide_to_right);
         fragmenttransaction.replace(R.id.flMain,cf,"Monthly Fragment");
+        fragmenttransaction.commit();
+    }
+
+    private void loadState2(){
+        FragmentTransaction fragmenttransaction= fragmentmanager.beginTransaction();
+        QuarterlyFragment cf=new QuarterlyFragment();
+        fragmenttransaction.setCustomAnimations(R.anim.slide_from_right,R.anim.slide_to_right);
+        fragmenttransaction.replace(R.id.flMain,cf,"Quarterly Fragment");
+        fragmenttransaction.commit();
+    }
+
+    private void loadState3(){
+        FragmentTransaction fragmenttransaction= fragmentmanager.beginTransaction();
+        YearlyFragment cf=new YearlyFragment();
+        fragmenttransaction.setCustomAnimations(R.anim.slide_from_right,R.anim.slide_to_right);
+        fragmenttransaction.replace(R.id.flMain,cf,"Yearly Fragment");
+        fragmenttransaction.commit();
+    }
+
+    private void loadState4(){
+        FragmentTransaction fragmenttransaction= fragmentmanager.beginTransaction();
+        OthersFragment cf=new OthersFragment();
+        fragmenttransaction.setCustomAnimations(R.anim.slide_from_right,R.anim.slide_to_right);
+        fragmenttransaction.replace(R.id.flMain,cf,"Others Fragment");
         fragmenttransaction.commit();
     }
 

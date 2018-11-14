@@ -32,7 +32,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class MonthlyFragment extends Fragment {
+public class QuarterlyFragment extends Fragment {
     View rootView;
     private ArrayList<BookModule> bookList1=new ArrayList<>();
     private ArrayList<BookModule> bookList2=new ArrayList<>();
@@ -124,7 +124,7 @@ public class MonthlyFragment extends Fragment {
         llMain.setVisibility(View.GONE);
         final JSONObject input = new JSONObject();
         try {
-            input.put("type","monthly");
+            input.put("type","quarterly");
 
         } catch (Exception e) {
             e.printStackTrace();
