@@ -49,18 +49,21 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class BookActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ImageView imgQrCode,imgBook;
-    private Button btnFeedback;
-    private AlertDialog alertDialog,alertDialog2;
+    private Button btnFeedback,btnRead;
+    private AlertDialog alertDialog;
     private TextView tvTitle,tvAuthor,tvPublish,tvCategory;
     private EditText etContent;
     private String flag="";
@@ -69,6 +72,7 @@ public class BookActivity extends AppCompatActivity {
     private String book_qr_code = "";
     String barcode_img="";
     public static final int Progress_Dialog_Progress = 0;
+    public static final int Progress_Dialog_Progress_2 = 1;
     URL url;
     URLConnection urlconnection ;
     int FileSize;
@@ -79,6 +83,10 @@ public class BookActivity extends AppCompatActivity {
     ProgressDialog progressdialog;
     LinearLayout llMain;
     String text;
+    String rootDir;
+    String book_title;
+    File outputFile;
+    int SHARE_PDF_FLAG = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,6 +115,7 @@ public class BookActivity extends AppCompatActivity {
         etContent = findViewById(R.id.etContent);
 
         btnFeedback = (Button)findViewById(R.id.btnFeedback);
+        btnRead = (Button)findViewById(R.id.btnRead);
 
         llMain = (LinearLayout)findViewById(R.id.llMain);
 
@@ -132,6 +141,7 @@ public class BookActivity extends AppCompatActivity {
             if (flag.equals("normal")){
                 book_id = getIntent().getStringExtra("book_id");
                 tvTitle.setText(getIntent().getStringExtra("book_title"));
+                book_title = getIntent().getStringExtra("book_title");
                 tvCategory.setText("Category: "+getIntent().getStringExtra("category"));
                 tvAuthor.setText("Author :"+getIntent().getStringExtra("book_author"));
                 tvPublish.setText("Originally published "+getIntent().getStringExtra("book_publish_date"));
@@ -189,6 +199,14 @@ public class BookActivity extends AppCompatActivity {
                 showBarcodePopup();
             }
         });
+
+        btnRead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SHARE_PDF_FLAG = 2;
+                new PDFDownloadWithProgressDialog().execute("https://media.termsfeed.com/pdf/privacy-policy-template.pdf");
+            }
+        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -201,10 +219,12 @@ public class BookActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.share:
-
+                SHARE_PDF_FLAG = 0;
+                new PDFDownloadWithProgressDialog().execute("https://media.termsfeed.com/pdf/privacy-policy-template.pdf");
                 return true;
             case R.id.download:
-
+                SHARE_PDF_FLAG = 1;
+                new PDFDownloadWithProgressDialog().execute("https://media.termsfeed.com/pdf/privacy-policy-template.pdf");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -309,7 +329,7 @@ public class BookActivity extends AppCompatActivity {
 
         } catch (Exception e) {
             Log.e("Error on sharing", e + " ");
-            Toast.makeText(this, "Sharings App not Installed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Sharing App is not Installed", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -393,6 +413,24 @@ public class BookActivity extends AppCompatActivity {
                 progressdialog.show();
                 return progressdialog;
 
+            case  Progress_Dialog_Progress_2:
+                progressdialog = new ProgressDialog(BookActivity.this);
+
+                if(SHARE_PDF_FLAG==0) {
+                    progressdialog.setMessage("Preparing Pdf to share...");
+
+                }else if (SHARE_PDF_FLAG==1){
+                    progressdialog.setMessage("Downloading Pdf From Server...");
+                }else if (SHARE_PDF_FLAG==2){
+
+                    progressdialog.setMessage("Preparing Pdf to read...");
+                }
+                progressdialog.setMax(100);
+                progressdialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progressdialog.setCancelable(false);
+                progressdialog.show();
+                return progressdialog;
+
             default:
 
                 return null;
@@ -409,6 +447,8 @@ public class BookActivity extends AppCompatActivity {
     private void showAlert(String type){
         if(type.equals("1")){
             text = "Barcode Image Downloaded In Your Internal Memory SmartLibrary folder";
+        }else {
+            text = "Pdf Downloaded In Your Internal Memory SmartLibrary folder";
         }
         Snackbar snackbar = Snackbar.make(llMain, text, Snackbar.LENGTH_LONG)
                 .setAction("OK", new View.OnClickListener() {
@@ -425,4 +465,102 @@ public class BookActivity extends AppCompatActivity {
         textView.setTextColor(Color.WHITE);
         snackbar.show();
     }
+
+    private class PDFDownloadWithProgressDialog extends AsyncTask<String,String,String> {
+
+        @Override
+        protected void onPreExecute() {
+            showDialog(Progress_Dialog_Progress_2);
+        }
+
+        @Override
+        protected String doInBackground(String... arg0) {
+            try {
+                 rootDir = Environment.getExternalStorageDirectory()
+                        + File.separator + "SmartLibrary/book";
+                File rootFile = new File(rootDir);
+                rootFile.mkdir();
+                URL url = new URL(arg0[0]);
+                HttpURLConnection c = (HttpURLConnection) url.openConnection();
+                c.setRequestMethod("GET");
+                c.setDoOutput(true);
+                c.connect();
+                FileSize = c.getContentLength();
+
+                String fileName = book_title+".pdf";
+                outputFile = new File(rootFile, fileName);
+                FileOutputStream outputStream = new FileOutputStream(outputFile);
+               // InputStream inputstream = c.getInputStream();
+                InputStream inputstream = new BufferedInputStream(url.openStream(),8192);
+                byte[] buffer = new byte[1024];
+                int len1 = 0;
+                while ((len1 = inputstream.read(buffer)) > 0) {
+                    totalSize += len1;
+
+                    publishProgress(""+(int)((totalSize*100)/FileSize));
+                    outputStream.write(buffer, 0, len1);
+                }
+                outputStream.flush();
+                outputStream.close();
+                inputstream.close();
+
+            //    shareVideoFilePath = rootDir+"/"+fileName;
+            } catch (IOException e) {
+                Log.d("Error....", e.toString());
+            }
+            return null;
+
+        }
+
+        protected void onProgressUpdate(final String... progress) {
+            progressdialog.setProgress(Integer.parseInt(progress[0]));
+
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String unused) {
+            dismissDialog(Progress_Dialog_Progress_2);
+
+            if(SHARE_PDF_FLAG == 0) {
+                // Log.d("SoumyaUri", thumbList.get(shareVideoFilePath).getImage());
+
+                sharePdf(outputFile);
+            }else if (SHARE_PDF_FLAG == 1){
+                showAlert("2");
+            }else if (SHARE_PDF_FLAG == 2){
+                showPdf(outputFile);
+            }
+        }
+
+    }
+
+    private void sharePdf(File outputFile){
+        Uri uri = Uri.fromFile(outputFile);
+
+        Intent share = new Intent();
+        share.setAction(Intent.ACTION_SEND);
+        share.setType("application/pdf");
+        share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        share.putExtra(Intent.EXTRA_STREAM, uri);
+        startActivity(share);
+
+    }
+
+    public void showPdf(File outputFile)
+    {
+
+        PackageManager packageManager = getPackageManager();
+        Intent testIntent = new Intent(Intent.ACTION_VIEW);
+        testIntent.setType("application/pdf");
+        List list = packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri uri = Uri.fromFile(outputFile);
+        intent.setDataAndType(uri, "application/pdf");
+        startActivity(intent);
+    }
+
+   
 }

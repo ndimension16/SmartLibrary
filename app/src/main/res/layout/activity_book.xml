@@ -109,6 +109,7 @@
                                     android:layout_weight="0.2"
                                     android:orientation="horizontal">
                                     <Button
+                                        android:id="@+id/btnRead"
                                         android:textSize="14sp"
                                         android:text="Reed Book"
                                         android:textAllCaps="false"
