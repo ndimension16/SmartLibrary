@@ -42,6 +42,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.gun0912.tedpermission.PermissionListener;
 import com.ndimension.smartlibrary.R;
+import com.ndimension.smartlibrary.utility.ConstantClass;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -87,6 +88,7 @@ public class BookActivity extends AppCompatActivity {
     String book_title;
     File outputFile;
     int SHARE_PDF_FLAG = 0;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -147,11 +149,12 @@ public class BookActivity extends AppCompatActivity {
                 tvPublish.setText("Originally published "+getIntent().getStringExtra("book_publish_date"));
 
                 etContent.setText(Html.fromHtml(getIntent().getStringExtra("book_content")).toString());
-                book_pdf_link = getIntent().getStringExtra("book_pdf_link");
+                book_pdf_link = ConstantClass.DRIVE_URL+getIntent().getStringExtra("book_pdf_link");
 
                 barcode_img = getIntent().getStringExtra("book_barcode_img");
                 book_qr_code = getIntent().getStringExtra("book_qr_code");
                 Log.d("SoumyaQrcode",book_qr_code);
+
 
                 try {
                     Picasso.with(this)
@@ -204,7 +207,7 @@ public class BookActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 SHARE_PDF_FLAG = 2;
-                new PDFDownloadWithProgressDialog().execute("https://media.termsfeed.com/pdf/privacy-policy-template.pdf");
+                new PDFDownloadWithProgressDialog().execute(book_pdf_link);
             }
         });
     }
@@ -220,11 +223,11 @@ public class BookActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.share:
                 SHARE_PDF_FLAG = 0;
-                new PDFDownloadWithProgressDialog().execute("https://media.termsfeed.com/pdf/privacy-policy-template.pdf");
+                new PDFDownloadWithProgressDialog().execute(book_pdf_link);
                 return true;
             case R.id.download:
                 SHARE_PDF_FLAG = 1;
-                new PDFDownloadWithProgressDialog().execute("https://media.termsfeed.com/pdf/privacy-policy-template.pdf");
+                new PDFDownloadWithProgressDialog().execute(book_pdf_link);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

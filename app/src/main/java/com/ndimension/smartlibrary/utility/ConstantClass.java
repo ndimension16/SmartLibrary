@@ -22,7 +22,7 @@ public class ConstantClass {
     public static final   String BASE_URL="https://ndlprojects.com/smartlibrary/api/";
     public static final String IMAGE_URL="https://ndlprojects.com/smartlibrary/uploads/book_image/";
     public static final String BARCODE_URL = "https://ndlprojects.com/smartlibrary/uploads/barcode_image/";
-    public static final String DRIVE_URL = "https://ndlprojects.com/smartlibrary/uploads/barcode_image/";
+    public static final String DRIVE_URL = "https://ndlprojects.com/smartlibrary/uploads/document/pdf/";
 
 
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
