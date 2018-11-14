@@ -531,8 +531,10 @@ public class BookActivity extends AppCompatActivity {
 
                 sharePdf(outputFile);
             }else if (SHARE_PDF_FLAG == 1){
+
                 showAlert("2");
             }else if (SHARE_PDF_FLAG == 2){
+
                 showPdf(outputFile);
             }
         }
