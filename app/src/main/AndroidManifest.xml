@@ -41,6 +41,10 @@
         <activity android:name=".activity.BookActivity"
             android:screenOrientation="userPortrait"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
+
+        <activity android:name=".activity.FeedbackActivity"
+            android:screenOrientation="userPortrait"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
     </application>
 
 </manifest>

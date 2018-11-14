@@ -36,6 +36,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -43,8 +50,12 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.gun0912.tedpermission.PermissionListener;
 import com.ndimension.smartlibrary.R;
 import com.ndimension.smartlibrary.utility.ConstantClass;
+import com.ndimension.smartlibrary.utility.Pref;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -88,6 +99,7 @@ public class BookActivity extends AppCompatActivity {
     String book_title;
     File outputFile;
     int SHARE_PDF_FLAG = 0;
+    Pref pref;
 
 
     @Override
@@ -120,6 +132,8 @@ public class BookActivity extends AppCompatActivity {
         btnRead = (Button)findViewById(R.id.btnRead);
 
         llMain = (LinearLayout)findViewById(R.id.llMain);
+
+        pref = new Pref(this);
 
      /*   QRCodeWriter writer = new QRCodeWriter();
         try {
@@ -242,12 +256,14 @@ public class BookActivity extends AppCompatActivity {
         final View dialogView = inflater.inflate(R.layout.dialog_feedback, null);
 
         TextView tvOk = (TextView) dialogView.findViewById(R.id.tvOk);
+        final EditText etFeedbackContent = (EditText)dialogView.findViewById(R.id.etFeedbackContent);
 
 
         tvOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 alertDialog.dismiss();
+                callFeedbackMethod(etFeedbackContent.getText().toString().trim());
 
             }
         });
@@ -565,6 +581,57 @@ public class BookActivity extends AppCompatActivity {
         Uri uri = Uri.fromFile(outputFile);
         intent.setDataAndType(uri, "application/pdf");
         startActivity(intent);
+    }
+
+    private void callFeedbackMethod(String feedback_content){
+        final JSONObject input = new JSONObject();
+        try {
+            input.put("user_id",pref.getUserId());
+            input.put("book_id",book_id);
+            input.put("feedback_content",feedback_content);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.d("inputFeedback",input.toString());
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading..");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                ConstantClass.BASE_URL+"feedback/feedbacksend", input, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("responseFeedback", response.toString());
+
+                progressDialog.hide();
+
+                if (response.optBoolean("status")){
+                    String statusCode = response.optString("statusCode");
+                    Toast.makeText(getApplicationContext(),response.optString("message"),Toast.LENGTH_SHORT).show();
+
+                }else {
+                    String statusCode = response.optString("statusCode");
+                    Toast.makeText(getApplicationContext(),response.optString("message"),Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                progressDialog.hide();
+            }
+        });
+
+
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(20000,
+                0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(jsonObjReq);
     }
 
    

@@ -45,9 +45,9 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private DrawerLayout dlMain;
-    private TextView tvHome,tvFeatured,tvScanner,tvShare,tvSettings,tvLogout;
-    private ImageView imgHome,imgFeatured,imgScanner,imgShare,imgSettings,imgLogout;
-    private LinearLayout llHome,llFeatured,llScanner,llShare,llSettings,llLogout;
+    private TextView tvHome,tvFeatured,tvScanner,tvFeedback,tvShare,tvSettings,tvLogout;
+    private ImageView imgHome,imgFeatured,imgScanner,imgFeedback,imgShare,imgSettings,imgLogout;
+    private LinearLayout llHome,llFeatured,llScanner,llFeedback,llShare,llSettings,llLogout;
     private LinearLayout llMonthly,llQuarterly,llYearly,llOthers;
     private TextView tvMonthly,tvQuarterly,tvYearly,tvOthers;
     private View vMonthly,vQuarterly,vYearly,vOthers;
@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         llHome = (LinearLayout)findViewById(R.id.llHome);
         llFeatured = (LinearLayout)findViewById(R.id.llFeatured);
         llScanner = (LinearLayout)findViewById(R.id.llScanner);
+        llFeedback = (LinearLayout)findViewById(R.id.llFeedback) ;
         llShare = (LinearLayout)findViewById(R.id.llShare);
         llSettings = (LinearLayout)findViewById(R.id.llSettings);
         llLogout = (LinearLayout)findViewById(R.id.llLogout);
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         tvHome = (TextView)findViewById(R.id.tvHome);
         tvFeatured = (TextView)findViewById(R.id.tvFeatured);
         tvScanner = (TextView)findViewById(R.id.tvScanner);
+        tvFeedback = (TextView)findViewById(R.id.tvFeedback) ;
         tvShare = (TextView)findViewById(R.id.tvShare);
         tvSettings = (TextView)findViewById(R.id.tvSettings);
         tvLogout = (TextView)findViewById(R.id.tvLogout);
@@ -94,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
         imgHome = (ImageView) findViewById(R.id.imgHome);
         imgFeatured = (ImageView)findViewById(R.id.imgFeatured);
         imgScanner = (ImageView)findViewById(R.id.imgScanner);
+        imgFeedback = (ImageView) findViewById(R.id.imgFeedback) ;
         imgShare = (ImageView)findViewById(R.id.imgShare);
         imgSettings = (ImageView) findViewById(R.id.imgSettings);
         imgLogout = (ImageView)findViewById(R.id.imgLogout);
@@ -163,6 +166,10 @@ public class MainActivity extends AppCompatActivity {
                 imgLogout.setColorFilter(newColor6, PorterDuff.Mode.SRC_ATOP);
                 tvLogout.setTextColor(getResources().getColor(R.color.text_color));
 
+                final int newColor7 = getResources().getColor(R.color.grey);
+                imgFeedback.setColorFilter(newColor7, PorterDuff.Mode.SRC_ATOP);
+                tvFeedback.setTextColor(getResources().getColor(R.color.text_color));
+
                 dlMain.closeDrawer(Gravity.START);
             }
         });
@@ -194,9 +201,13 @@ public class MainActivity extends AppCompatActivity {
                 imgLogout.setColorFilter(newColor6, PorterDuff.Mode.SRC_ATOP);
                 tvLogout.setTextColor(getResources().getColor(R.color.text_color));
 
+                final int newColor7 = getResources().getColor(R.color.grey);
+                imgFeedback.setColorFilter(newColor7, PorterDuff.Mode.SRC_ATOP);
+                tvFeedback.setTextColor(getResources().getColor(R.color.text_color));
+
                 dlMain.closeDrawer(Gravity.START);
 
-               // startActivity(new Intent(MainActivity.this,BookActivity.class));
+
             }
         });
 
@@ -227,9 +238,52 @@ public class MainActivity extends AppCompatActivity {
                 imgLogout.setColorFilter(newColor6, PorterDuff.Mode.SRC_ATOP);
                 tvLogout.setTextColor(getResources().getColor(R.color.text_color));
 
+                final int newColor7 = getResources().getColor(R.color.grey);
+                imgFeedback.setColorFilter(newColor7, PorterDuff.Mode.SRC_ATOP);
+                tvFeedback.setTextColor(getResources().getColor(R.color.text_color));
+
                 dlMain.closeDrawer(Gravity.START);
 
                 startScanning();
+            }
+        });
+
+        llFeedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final int newColor = getResources().getColor(R.color.grey);
+                imgHome.setColorFilter(newColor, PorterDuff.Mode.SRC_ATOP);
+                tvHome.setTextColor(getResources().getColor(R.color.text_color));
+
+                final int newColor2 = getResources().getColor(R.color.grey);
+                imgFeatured.setColorFilter(newColor2, PorterDuff.Mode.SRC_ATOP);
+                tvFeatured.setTextColor(getResources().getColor(R.color.text_color));
+
+                final int newColor3 = getResources().getColor(R.color.grey);
+                imgScanner.setColorFilter(newColor3, PorterDuff.Mode.SRC_ATOP);
+                tvScanner.setTextColor(getResources().getColor(R.color.grey));
+
+                final int newColor4 = getResources().getColor(R.color.grey);
+                imgShare.setColorFilter(newColor4, PorterDuff.Mode.SRC_ATOP);
+                tvShare.setTextColor(getResources().getColor(R.color.text_color));
+
+                final int newColor5 = getResources().getColor(R.color.grey);
+                imgSettings.setColorFilter(newColor5, PorterDuff.Mode.SRC_ATOP);
+                tvSettings.setTextColor(getResources().getColor(R.color.text_color));
+
+                final int newColor6 = getResources().getColor(R.color.grey);
+                imgLogout.setColorFilter(newColor6, PorterDuff.Mode.SRC_ATOP);
+                tvLogout.setTextColor(getResources().getColor(R.color.text_color));
+
+                final int newColor7 = getResources().getColor(R.color.colorAccent);
+                imgFeedback.setColorFilter(newColor7, PorterDuff.Mode.SRC_ATOP);
+                tvFeedback.setTextColor(getResources().getColor(R.color.colorAccent));
+
+                dlMain.closeDrawer(Gravity.START);
+
+                startActivity(new Intent(MainActivity.this,FeedbackActivity.class));
+
+
             }
         });
 
@@ -259,6 +313,10 @@ public class MainActivity extends AppCompatActivity {
                 final int newColor6 = getResources().getColor(R.color.grey);
                 imgLogout.setColorFilter(newColor6, PorterDuff.Mode.SRC_ATOP);
                 tvLogout.setTextColor(getResources().getColor(R.color.text_color));
+
+                final int newColor7 = getResources().getColor(R.color.grey);
+                imgFeedback.setColorFilter(newColor7, PorterDuff.Mode.SRC_ATOP);
+                tvFeedback.setTextColor(getResources().getColor(R.color.text_color));
 
                 dlMain.closeDrawer(Gravity.START);
 
@@ -293,6 +351,10 @@ public class MainActivity extends AppCompatActivity {
                 imgLogout.setColorFilter(newColor6, PorterDuff.Mode.SRC_ATOP);
                 tvLogout.setTextColor(getResources().getColor(R.color.text_color));
 
+                final int newColor7 = getResources().getColor(R.color.grey);
+                imgFeedback.setColorFilter(newColor7, PorterDuff.Mode.SRC_ATOP);
+                tvFeedback.setTextColor(getResources().getColor(R.color.text_color));
+
                 dlMain.closeDrawer(Gravity.START);
             }
         });
@@ -323,6 +385,10 @@ public class MainActivity extends AppCompatActivity {
                 final int newColor6 = getResources().getColor(R.color.colorAccent);
                 imgLogout.setColorFilter(newColor6, PorterDuff.Mode.SRC_ATOP);
                 tvLogout.setTextColor(getResources().getColor(R.color.colorAccent));
+
+                final int newColor7 = getResources().getColor(R.color.grey);
+                imgFeedback.setColorFilter(newColor7, PorterDuff.Mode.SRC_ATOP);
+                tvFeedback.setTextColor(getResources().getColor(R.color.text_color));
 
                 dlMain.closeDrawer(Gravity.START);
 
