@@ -31,7 +31,6 @@ import com.android.volley.toolbox.Volley;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.ndimension.smartlibrary.R;
-import com.ndimension.smartlibrary.adapter.HomePagerAdapter;
 import com.ndimension.smartlibrary.fragment.MonthlyFragment;
 import com.ndimension.smartlibrary.fragment.OthersFragment;
 import com.ndimension.smartlibrary.fragment.QuarterlyFragment;
@@ -206,6 +205,8 @@ public class MainActivity extends AppCompatActivity {
                 tvFeedback.setTextColor(getResources().getColor(R.color.text_color));
 
                 dlMain.closeDrawer(Gravity.START);
+
+                startActivity(new Intent(MainActivity.this,FeaturedActivity.class));
 
 
             }

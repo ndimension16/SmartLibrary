@@ -45,6 +45,10 @@
         <activity android:name=".activity.FeedbackActivity"
             android:screenOrientation="userPortrait"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
+
+        <activity android:name=".activity.FeaturedActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:screenOrientation="userPortrait"/>
     </application>
 
 </manifest>
