@@ -21,7 +21,7 @@
     android:singleLine="true"
     android:textSize="15sp"
     android:text="Islamic Art"
-    android:textColor="@color/colorAccent"
+    android:textColor="#353333"
     android:layout_height="wrap_content" />
 
 </LinearLayout>

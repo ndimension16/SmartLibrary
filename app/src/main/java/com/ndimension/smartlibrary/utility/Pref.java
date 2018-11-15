@@ -80,6 +80,37 @@ public class Pref {
         _editorPref.commit();
     }
 
+    public void saveBlockNotification(String block) {
+        _editorPref.putString("block", block);
+        _editorPref.commit();
+    }
+
+
+    public String getBlockNotification() {
+        return _pref.getString("block", "");
+    }
+
+    public void saveSound(String sound) {
+        _editorPref.putString("sound", sound);
+        _editorPref.commit();
+    }
+
+
+    public String getSound() {
+        return _pref.getString("sound", "");
+    }
+
+
+    public void saveVibrate(String vibrate) {
+        _editorPref.putString("vibrate", vibrate);
+        _editorPref.commit();
+    }
+
+
+    public String getVibrate() {
+        return _pref.getString("vibrate", "");
+    }
+
 
 
 }

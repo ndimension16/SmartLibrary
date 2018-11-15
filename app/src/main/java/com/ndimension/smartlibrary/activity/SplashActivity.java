@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.google.firebase.FirebaseApp;
 import com.ndimension.smartlibrary.R;
 import com.ndimension.smartlibrary.utility.CreativePermission;
 import com.ndimension.smartlibrary.utility.NetworkConnectionCheck;
@@ -23,7 +24,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
+        FirebaseApp.initializeApp(this);
         initialize();
 
         CheckPermission();

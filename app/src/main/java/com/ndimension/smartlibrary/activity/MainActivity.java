@@ -28,8 +28,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.FirebaseApp;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.ndimension.smartlibrary.FCM.DeleteTokenService;
 import com.ndimension.smartlibrary.R;
 import com.ndimension.smartlibrary.fragment.MonthlyFragment;
 import com.ndimension.smartlibrary.fragment.OthersFragment;
@@ -63,6 +65,11 @@ public class MainActivity extends AppCompatActivity {
         initialize();
         peformAction();
         loadState();
+
+        //FirebaseApp.initializeApp(this);
+
+        Intent refreshToken = new Intent(this, DeleteTokenService.class);       ///for notification
+        startService(refreshToken);
     }
 
     private void initialize(){
@@ -122,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
 
         tvName.setText(pref.getName());
         tvEmail.setText(pref.getEmail());
+
+        Log.d("Soumya269",pref.getBlockNotification());
 
 
     }
@@ -357,6 +366,8 @@ public class MainActivity extends AppCompatActivity {
                 tvFeedback.setTextColor(getResources().getColor(R.color.text_color));
 
                 dlMain.closeDrawer(Gravity.START);
+
+                startActivity(new Intent(MainActivity.this,SettingsActivity.class));
             }
         });
 
