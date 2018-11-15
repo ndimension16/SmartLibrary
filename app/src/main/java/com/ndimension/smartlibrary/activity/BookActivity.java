@@ -163,7 +163,9 @@ public class BookActivity extends AppCompatActivity {
                 tvPublish.setText("Originally published "+getIntent().getStringExtra("book_publish_date"));
 
                 etContent.setText(Html.fromHtml(getIntent().getStringExtra("book_content")).toString());
-                book_pdf_link = ConstantClass.DRIVE_URL+getIntent().getStringExtra("book_pdf_link");
+                if (!getIntent().getStringExtra("book_pdf_link").equals("")) {
+                    book_pdf_link = ConstantClass.DRIVE_URL + getIntent().getStringExtra("book_pdf_link");
+                }
 
                 barcode_img = getIntent().getStringExtra("book_barcode_img");
                 book_qr_code = getIntent().getStringExtra("book_qr_code");
@@ -221,7 +223,11 @@ public class BookActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 SHARE_PDF_FLAG = 2;
-                new PDFDownloadWithProgressDialog().execute(book_pdf_link);
+                if (!book_pdf_link.equals("")) {
+                    new PDFDownloadWithProgressDialog().execute(book_pdf_link);
+                }else {
+                    Toast.makeText(getApplicationContext(),"Pdf Link is not found",Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -237,11 +243,19 @@ public class BookActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.share:
                 SHARE_PDF_FLAG = 0;
-                new PDFDownloadWithProgressDialog().execute(book_pdf_link);
+                if (!book_pdf_link.equals("")) {
+                    new PDFDownloadWithProgressDialog().execute(book_pdf_link);
+                }else {
+                    Toast.makeText(getApplicationContext(),"Pdf Link is not found",Toast.LENGTH_SHORT).show();
+                }
                 return true;
             case R.id.download:
                 SHARE_PDF_FLAG = 1;
+                if (!book_pdf_link.equals("")) {
                 new PDFDownloadWithProgressDialog().execute(book_pdf_link);
+                }else {
+                    Toast.makeText(getApplicationContext(),"Pdf Link is not found",Toast.LENGTH_SHORT).show();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
