@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "887634088614",
-    "firebase_url": "https://smartlibrary-84b7e.firebaseio.com",
-    "project_id": "smartlibrary-84b7e",
-    "storage_bucket": "smartlibrary-84b7e.appspot.com"
+    "project_number": "140843987291",
+    "firebase_url": "https://smartlibrarynew.firebaseio.com",
+    "project_id": "smartlibrarynew",
+    "storage_bucket": "smartlibrarynew.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:887634088614:android:288dc543df6a797a",
+        "mobilesdk_app_id": "1:140843987291:android:288dc543df6a797a",
         "android_client_info": {
           "package_name": "com.ndimension.smartlibrary"
         }
       },
       "oauth_client": [
         {
-          "client_id": "887634088614-qtpqmuh8p4ejmbcmmg2ct1fffna4p4k0.apps.googleusercontent.com",
+          "client_id": "140843987291-h15tfa4jlmr81kpq79nhge7eqssp1qq5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAiA1FYn81Oc1gRKJ503vs9vmLElwrNzDI"
+          "current_key": "AIzaSyBEvRoS0ceFQL5KopYBK3ND-c39SmPj_Hs"
         }
       ],
       "services": {

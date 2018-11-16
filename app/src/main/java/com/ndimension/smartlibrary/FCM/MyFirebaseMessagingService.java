@@ -28,6 +28,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+       super.onMessageReceived(remoteMessage);
         Log.d(TAG, "From: " + remoteMessage.getFrom());
         Log.d(TAG, "Notification Message Body: " + remoteMessage.getData().toString());
         pref = new Pref(this);
@@ -50,6 +51,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 }
             }
         }
+
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            showNotificationAboveOreo(this, title, msg);
+        } else {
+            sendNotification(msg, title);
+        }*/
     }
     private void sendNotification(String messageBody,String title) {
         Random rn = new Random();
