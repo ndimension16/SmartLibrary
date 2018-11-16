@@ -450,13 +450,13 @@ public class BookActivity extends AppCompatActivity {
                 progressdialog = new ProgressDialog(BookActivity.this);
 
                 if(SHARE_PDF_FLAG==0) {
-                    progressdialog.setMessage("Preparing Pdf to share...");
+                    progressdialog.setMessage("Preparing Pdf ...");
 
                 }else if (SHARE_PDF_FLAG==1){
-                    progressdialog.setMessage("Downloading Pdf From Server...");
+                    progressdialog.setMessage("Preparing Pdf ...");
                 }else if (SHARE_PDF_FLAG==2){
 
-                    progressdialog.setMessage("Preparing Pdf to read...");
+                    progressdialog.setMessage("Preparing Pdf ...");
                 }
                 progressdialog.setMax(100);
                 progressdialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);

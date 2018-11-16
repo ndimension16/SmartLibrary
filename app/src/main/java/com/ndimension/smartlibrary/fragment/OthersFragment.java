@@ -66,33 +66,43 @@ public class OthersFragment extends Fragment {
     private void initialize(){
         rv1 = (RecyclerView)rootView.findViewById(R.id.rv1);
         rv1.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
+        rv1.setNestedScrollingEnabled(false);
 
         rv2 = (RecyclerView)rootView.findViewById(R.id.rv2);
         rv2.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
+        rv2.setNestedScrollingEnabled(false);
 
         rv3 = (RecyclerView)rootView.findViewById(R.id.rv3);
         rv3.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
+        rv3.setNestedScrollingEnabled(false);
 
         rv4 = (RecyclerView)rootView.findViewById(R.id.rv4);
         rv4.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
+        rv4.setNestedScrollingEnabled(false);
 
         rv5 = (RecyclerView)rootView.findViewById(R.id.rv5);
         rv5.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
+        rv5.setNestedScrollingEnabled(false);
 
         rv6 = (RecyclerView)rootView.findViewById(R.id.rv6);
         rv6.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
+        rv6.setNestedScrollingEnabled(false);
 
         rv7 = (RecyclerView)rootView.findViewById(R.id.rv7);
         rv7.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
+        rv7.setNestedScrollingEnabled(false);
 
         rv8 = (RecyclerView)rootView.findViewById(R.id.rv8);
         rv8.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
+        rv8.setNestedScrollingEnabled(false);
 
         rv9 = (RecyclerView)rootView.findViewById(R.id.rv9);
         rv9.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
+        rv9.setNestedScrollingEnabled(false);
 
         rv10 = (RecyclerView)rootView.findViewById(R.id.rv10);
         rv10.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
+        rv10.setNestedScrollingEnabled(false);
 
         tv1 = (TextView)rootView.findViewById(R.id.tv1);
         tv2 = (TextView)rootView.findViewById(R.id.tv2);
