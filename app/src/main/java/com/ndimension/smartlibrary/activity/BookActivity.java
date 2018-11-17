@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.LongDef;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
@@ -34,6 +35,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +46,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.DownloadListener;
+import com.androidnetworking.interfaces.DownloadProgressListener;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -102,6 +109,7 @@ public class BookActivity extends AppCompatActivity {
     File outputFile;
     int SHARE_PDF_FLAG = 0;
     Pref pref;
+    private int progressStatus = 0;
 
 
     @Override
@@ -226,7 +234,8 @@ public class BookActivity extends AppCompatActivity {
             public void onClick(View view) {
                 SHARE_PDF_FLAG = 2;
                 if (!book_pdf_link.equals("")) {
-                    new PDFDownloadWithProgressDialog().execute(book_pdf_link);
+                  //  new PDFDownloadWithProgressDialog().execute(book_pdf_link);
+                    downloadPDF(book_pdf_link);
                 }else {
                     Toast.makeText(getApplicationContext(),"Pdf Link is not found",Toast.LENGTH_SHORT).show();
                 }
@@ -246,7 +255,8 @@ public class BookActivity extends AppCompatActivity {
             case R.id.share:
                 SHARE_PDF_FLAG = 0;
                 if (!book_pdf_link.equals("")) {
-                    new PDFDownloadWithProgressDialog().execute(book_pdf_link);
+                   // new PDFDownloadWithProgressDialog().execute(book_pdf_link);
+                    downloadPDF(book_pdf_link);
                 }else {
                     Toast.makeText(getApplicationContext(),"Pdf Link is not found",Toast.LENGTH_SHORT).show();
                 }
@@ -254,7 +264,8 @@ public class BookActivity extends AppCompatActivity {
             case R.id.download:
                 SHARE_PDF_FLAG = 1;
                 if (!book_pdf_link.equals("")) {
-                new PDFDownloadWithProgressDialog().execute(book_pdf_link);
+               // new PDFDownloadWithProgressDialog().execute(book_pdf_link);
+                downloadPDF(book_pdf_link);
                 }else {
                     Toast.makeText(getApplicationContext(),"Pdf Link is not found",Toast.LENGTH_SHORT).show();
                 }
@@ -334,7 +345,8 @@ public class BookActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 alertDialog.dismiss();
-                new ImageDownloadWithProgressDialog().execute(barcode_img);
+                downloadImage(barcode_img);
+              //  new ImageDownloadWithProgressDialog().execute(barcode_img);
 
             }
         });
@@ -373,72 +385,7 @@ public class BookActivity extends AppCompatActivity {
         }
     }
 
-    public class ImageDownloadWithProgressDialog extends AsyncTask<String, String, String> {
 
-        @Override
-        protected void onPreExecute() {
-
-            super.onPreExecute();
-
-            showDialog(Progress_Dialog_Progress);
-        }
-
-        @Override
-        protected String doInBackground(String... aurl) {
-
-            int count;
-
-            try {
-                /*String rootDir = Environment.getExternalStorageDirectory()
-                        + File.separator + "WhatsAppStatus/Image";*/
-                String rootDir = Environment.getExternalStorageDirectory()
-                        + File.separator + "SmartLibrary/barcode";
-                File rootFile = new File(rootDir);
-                rootFile.mkdir();
-
-
-                url = new URL(aurl[0]);
-                urlconnection = url.openConnection();
-                urlconnection.connect();
-
-                FileSize = urlconnection.getContentLength();
-
-                inputstream = new BufferedInputStream(url.openStream(),8192);
-                outputstream = new FileOutputStream(new File(rootFile, book_qr_code+".jpg"));
-
-
-                while ((count = inputstream.read(dataArray)) != -1) {
-
-                    totalSize += count;
-
-                    publishProgress(""+(int)((totalSize*100)/FileSize));
-
-                    outputstream.write(dataArray, 0, count);
-                }
-
-                outputstream.flush();
-                outputstream.close();
-                inputstream.close();
-
-            } catch (Exception e) {}
-            return null;
-
-        }
-        protected void onProgressUpdate(final String... progress) {
-            progressdialog.setProgress(Integer.parseInt(progress[0]));
-
-
-
-        }
-
-        @Override
-        protected void onPostExecute(String unused) {
-
-            dismissDialog(Progress_Dialog_Progress);
-
-            showAlert("1");
-        }
-    }
 
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -601,17 +548,30 @@ public class BookActivity extends AppCompatActivity {
         Intent testIntent = new Intent(Intent.ACTION_VIEW);
         testIntent.setType("application/pdf");
         List list = packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY);*/
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-      //  Uri uri = Uri.fromFile(outputFile);
-        Uri uri = FileProvider.getUriForFile(
-                BookActivity.this,
-                BuildConfig.APPLICATION_ID + ".provider", outputFile);
-        Log.d("SoumyaURI",uri.toString());
-        intent.setDataAndType(uri, "application/pdf");
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+      if(outputFile.exists()) {
+          Intent intent = new Intent();
+          intent.setAction(Intent.ACTION_VIEW);
+          //  Uri uri = Uri.fromFile(outputFile);
+          Uri uri = FileProvider.getUriForFile(
+                  BookActivity.this,
+                  BuildConfig.APPLICATION_ID + ".provider", outputFile);
+
+         /* file:///storage/emulated/0/SmartLibrary/book/Money%20revolution.pdf  --> working
+          content://com.ndimension.smartlibrary.provider/external_files/SmartLibrary/book/Money%20revolution.pdf --> Not Working*/
+
+          Log.d("SoumyaURI", uri.toString());
+          intent.setDataAndType(uri, "application/pdf");
+          intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+          intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+          intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+          try {
+              startActivity(intent);
+          } catch (Exception e) {
+        Log.e("SoumyaError1", "" + e);
+    }
+      }else {
+          Log.e("SoumyaError2", "" + "Not Found");
+      }
     }
 
     private void callFeedbackMethod(String feedback_content){
@@ -663,6 +623,152 @@ public class BookActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(jsonObjReq);
+    }
+
+    private void downloadImage(String imageURL) {
+        showDialog(Progress_Dialog_Progress);
+        AndroidNetworking.download(imageURL, Environment.getExternalStorageDirectory() + "/" + "SmartLibrary/barcode" + "/", book_qr_code + ".jpg")
+                .setPriority(Priority.HIGH)
+                .build()
+                .setDownloadProgressListener(new DownloadProgressListener() {
+                    @Override
+                    public void onProgress(long bytesDownloaded, long totalBytes) {
+                        // do anything with progress
+
+                            progressdialog.setProgress(Integer.parseInt(String.valueOf((totalBytes * 100) / bytesDownloaded)));
+
+
+
+                    }
+                })
+                .startDownload(new DownloadListener() {
+                    @Override
+                    public void onDownloadComplete() {
+                        dismissDialog(Progress_Dialog_Progress);
+
+                        // do anything after completion
+                        showAlert("1");
+
+                    }
+
+                    @Override
+                    public void onError(ANError error) {
+                        // handle error
+
+                    }
+
+
+                });
+    }
+
+    private void downloadPDF(String pdfURL) {
+        showDialog(Progress_Dialog_Progress_2);
+        AndroidNetworking.download(pdfURL, Environment.getExternalStorageDirectory() + "/" + "SmartLibrary/book" + "/", book_title+".pdf")
+                .setPriority(Priority.HIGH)
+                .build()
+                .setDownloadProgressListener(new DownloadProgressListener() {
+                    @Override
+                    public void onProgress(long bytesDownloaded, long totalBytes) {
+                        // do anything with progress
+                        progressdialog.setProgress(Integer.parseInt(String.valueOf((totalBytes*100)/bytesDownloaded)));
+
+                    }
+                })
+                .startDownload(new DownloadListener() {
+                    @Override
+                    public void onDownloadComplete() {
+                        outputFile = new File(Environment.getExternalStorageDirectory() + "/" + "SmartLibrary/book", book_title+".pdf");
+                        // do anything after completion
+                        dismissDialog(Progress_Dialog_Progress_2);
+                        if(SHARE_PDF_FLAG == 0) {
+                            // Log.d("SoumyaUri", thumbList.get(shareVideoFilePath).getImage());
+
+                            sharePdf(outputFile);
+                        }else if (SHARE_PDF_FLAG == 1){
+
+                            showAlert("2");
+                        }else if (SHARE_PDF_FLAG == 2){
+
+                            showPdf(outputFile);
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(ANError error) {
+                        // handle error
+
+                    }
+
+
+                });
+    }
+
+    public class ImageDownloadWithProgressDialog extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+
+            showDialog(Progress_Dialog_Progress);
+        }
+
+        @Override
+        protected String doInBackground(String... aurl) {
+
+            int count;
+
+            try {
+                /*String rootDir = Environment.getExternalStorageDirectory()
+                        + File.separator + "WhatsAppStatus/Image";*/
+                String rootDir = Environment.getExternalStorageDirectory()
+                        + File.separator + "SmartLibrary/barcode";
+                File rootFile = new File(rootDir);
+                rootFile.mkdir();
+
+
+                url = new URL(aurl[0]);
+                urlconnection = url.openConnection();
+                urlconnection.connect();
+
+                FileSize = urlconnection.getContentLength();
+
+                inputstream = new BufferedInputStream(url.openStream(),8192);
+                outputstream = new FileOutputStream(new File(rootFile, book_qr_code+".jpg"));
+
+
+                while ((count = inputstream.read(dataArray)) != -1) {
+
+                    totalSize += count;
+
+                    publishProgress(""+(int)((totalSize*100)/FileSize));
+
+                    outputstream.write(dataArray, 0, count);
+                }
+
+                outputstream.flush();
+                outputstream.close();
+                inputstream.close();
+
+            } catch (Exception e) {}
+            return null;
+
+        }
+        protected void onProgressUpdate(final String... progress) {
+            progressdialog.setProgress(Integer.parseInt(progress[0]));
+
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String unused) {
+
+            dismissDialog(Progress_Dialog_Progress);
+
+            showAlert("1");
+        }
     }
 
    
