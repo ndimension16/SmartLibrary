@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -519,7 +520,7 @@ public class BookActivity extends AppCompatActivity {
                 showAlert("2");
             }else if (SHARE_PDF_FLAG == 2){
 
-                showPdf(outputFile);
+                //showPdf(outputFile);
             }
         }
 
@@ -541,37 +542,24 @@ public class BookActivity extends AppCompatActivity {
 
     }
 
-    public void showPdf(File outputFile)
+    public void showPdf(String outputFile)
     {
 
-      /*  PackageManager packageManager = getPackageManager();
-        Intent testIntent = new Intent(Intent.ACTION_VIEW);
-        testIntent.setType("application/pdf");
-        List list = packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY);*/
-      if(outputFile.exists()) {
-          Intent intent = new Intent();
-          intent.setAction(Intent.ACTION_VIEW);
-          //  Uri uri = Uri.fromFile(outputFile);
-          Uri uri = FileProvider.getUriForFile(
-                  BookActivity.this,
-                  BuildConfig.APPLICATION_ID + ".provider", outputFile);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                File file = new File(outputFile);
+                Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", file);
+                intent.setData(uri);
+                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(intent);
+            } else {
 
-         /* file:///storage/emulated/0/SmartLibrary/book/Money%20revolution.pdf  --> working
-          content://com.ndimension.smartlibrary.provider/external_files/SmartLibrary/book/Money%20revolution.pdf --> Not Working*/
+                intent.setDataAndType(Uri.parse(outputFile), "application/pdf");
+                intent = Intent.createChooser(intent, "Open File");
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
 
-          Log.d("SoumyaURI", uri.toString());
-          intent.setDataAndType(uri, "application/pdf");
-          intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-          intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-          intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-          try {
-              startActivity(intent);
-          } catch (Exception e) {
-        Log.e("SoumyaError1", "" + e);
-    }
-      }else {
-          Log.e("SoumyaError2", "" + "Not Found");
-      }
     }
 
     private void callFeedbackMethod(String feedback_content){
@@ -677,7 +665,7 @@ public class BookActivity extends AppCompatActivity {
                 .startDownload(new DownloadListener() {
                     @Override
                     public void onDownloadComplete() {
-                        outputFile = new File(Environment.getExternalStorageDirectory() + "/" + "SmartLibrary/book", book_title+".pdf");
+                        outputFile = new File(Environment.getExternalStorageDirectory() + "/" + "SmartLibrary/book/", book_title+".pdf");
                         // do anything after completion
                         dismissDialog(Progress_Dialog_Progress_2);
                         if(SHARE_PDF_FLAG == 0) {
@@ -689,7 +677,8 @@ public class BookActivity extends AppCompatActivity {
                             showAlert("2");
                         }else if (SHARE_PDF_FLAG == 2){
 
-                            showPdf(outputFile);
+                            showPdf(Environment.getExternalStorageDirectory() + "/" + "SmartLibrary/book" + "/"+book_title+".pdf");
+                            //openPDF("SmartLibrary/book/"+book_title+".pdf");
                         }
 
                     }
@@ -769,6 +758,24 @@ public class BookActivity extends AppCompatActivity {
 
             showAlert("1");
         }
+    }
+
+    private void openPDF(String filePath)
+    {
+        File pdfFile = new File(Environment.getExternalStorageDirectory(),filePath);//File path
+        if (pdfFile.exists()) //Checking if the file exists or not
+        {
+            Uri path = Uri.fromFile(pdfFile);
+            Intent objIntent = new Intent(Intent.ACTION_VIEW);
+            objIntent.setDataAndType(path, "application/pdf");
+            objIntent.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(objIntent);//Starting the pdf viewer
+        } else {
+
+            Toast.makeText(BookActivity.this, "The file not exists! ", Toast.LENGTH_SHORT).show();
+
+        }
+
     }
 
    
