@@ -236,7 +236,12 @@ public class BookActivity extends AppCompatActivity {
                 SHARE_PDF_FLAG = 2;
                 if (!book_pdf_link.equals("")) {
                   //  new PDFDownloadWithProgressDialog().execute(book_pdf_link);
-                    downloadPDF(book_pdf_link);
+                    if (!checkFileExistsOrNot()) {
+                        downloadPDF(book_pdf_link);
+                    }
+                    else {
+                        showPdf(Environment.getExternalStorageDirectory() + "/" + "SmartLibrary/book" + "/"+book_title+".pdf");
+                    }
                 }else {
                     Toast.makeText(getApplicationContext(),"Pdf Link is not found",Toast.LENGTH_SHORT).show();
                 }
@@ -257,7 +262,12 @@ public class BookActivity extends AppCompatActivity {
                 SHARE_PDF_FLAG = 0;
                 if (!book_pdf_link.equals("")) {
                    // new PDFDownloadWithProgressDialog().execute(book_pdf_link);
-                    downloadPDF(book_pdf_link);
+                    if (!checkFileExistsOrNot()) {
+                        downloadPDF(book_pdf_link);
+                    }
+                    else {
+                        showPdf(Environment.getExternalStorageDirectory() + "/" + "SmartLibrary/book" + "/"+book_title+".pdf");
+                    }
                 }else {
                     Toast.makeText(getApplicationContext(),"Pdf Link is not found",Toast.LENGTH_SHORT).show();
                 }
@@ -266,7 +276,12 @@ public class BookActivity extends AppCompatActivity {
                 SHARE_PDF_FLAG = 1;
                 if (!book_pdf_link.equals("")) {
                // new PDFDownloadWithProgressDialog().execute(book_pdf_link);
-                downloadPDF(book_pdf_link);
+                    if (!checkFileExistsOrNot()) {
+                        downloadPDF(book_pdf_link);
+                    }
+                    else {
+                        showPdf(Environment.getExternalStorageDirectory() + "/" + "SmartLibrary/book" + "/"+book_title+".pdf");
+                    }
                 }else {
                     Toast.makeText(getApplicationContext(),"Pdf Link is not found",Toast.LENGTH_SHORT).show();
                 }
@@ -454,78 +469,6 @@ public class BookActivity extends AppCompatActivity {
         snackbar.show();
     }
 
-    private class PDFDownloadWithProgressDialog extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            showDialog(Progress_Dialog_Progress_2);
-        }
-
-        @Override
-        protected String doInBackground(String... arg0) {
-            try {
-                 rootDir = Environment.getExternalStorageDirectory()
-                        + File.separator + "SmartLibrary/book";
-                File rootFile = new File(rootDir);
-                rootFile.mkdir();
-                URL url = new URL(arg0[0]);
-                HttpURLConnection c = (HttpURLConnection) url.openConnection();
-                c.setRequestMethod("GET");
-                c.setDoOutput(true);
-                c.connect();
-                FileSize = c.getContentLength();
-
-                String fileName = book_title+".pdf";
-                outputFile = new File(rootFile, fileName);
-                FileOutputStream outputStream = new FileOutputStream(outputFile);
-               // InputStream inputstream = c.getInputStream();
-                InputStream inputstream = new BufferedInputStream(url.openStream(),8192);
-                byte[] buffer = new byte[1024];
-                int len1 = 0;
-                while ((len1 = inputstream.read(buffer)) > 0) {
-                    totalSize += len1;
-
-                    publishProgress(""+(int)((totalSize*100)/FileSize));
-                    outputStream.write(buffer, 0, len1);
-                }
-                outputStream.flush();
-                outputStream.close();
-                inputstream.close();
-
-            //    shareVideoFilePath = rootDir+"/"+fileName;
-            } catch (IOException e) {
-                Log.d("Error....", e.toString());
-            }
-            return null;
-
-        }
-
-        protected void onProgressUpdate(final String... progress) {
-            progressdialog.setProgress(Integer.parseInt(progress[0]));
-
-
-
-        }
-
-        @Override
-        protected void onPostExecute(String unused) {
-            dismissDialog(Progress_Dialog_Progress_2);
-
-            if(SHARE_PDF_FLAG == 0) {
-                // Log.d("SoumyaUri", thumbList.get(shareVideoFilePath).getImage());
-
-                sharePdf(outputFile);
-            }else if (SHARE_PDF_FLAG == 1){
-
-                showAlert("2");
-            }else if (SHARE_PDF_FLAG == 2){
-
-                //showPdf(outputFile);
-            }
-        }
-
-    }
-
     private void sharePdf(File outputFile){
       //  Uri uri = Uri.fromFile(outputFile);
         Uri uri = FileProvider.getUriForFile(
@@ -692,91 +635,16 @@ public class BookActivity extends AppCompatActivity {
 
                 });
     }
-
-    public class ImageDownloadWithProgressDialog extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-
-            super.onPreExecute();
-
-            showDialog(Progress_Dialog_Progress);
-        }
-
-        @Override
-        protected String doInBackground(String... aurl) {
-
-            int count;
-
-            try {
-                /*String rootDir = Environment.getExternalStorageDirectory()
-                        + File.separator + "WhatsAppStatus/Image";*/
-                String rootDir = Environment.getExternalStorageDirectory()
-                        + File.separator + "SmartLibrary/barcode";
-                File rootFile = new File(rootDir);
-                rootFile.mkdir();
-
-
-                url = new URL(aurl[0]);
-                urlconnection = url.openConnection();
-                urlconnection.connect();
-
-                FileSize = urlconnection.getContentLength();
-
-                inputstream = new BufferedInputStream(url.openStream(),8192);
-                outputstream = new FileOutputStream(new File(rootFile, book_qr_code+".jpg"));
-
-
-                while ((count = inputstream.read(dataArray)) != -1) {
-
-                    totalSize += count;
-
-                    publishProgress(""+(int)((totalSize*100)/FileSize));
-
-                    outputstream.write(dataArray, 0, count);
-                }
-
-                outputstream.flush();
-                outputstream.close();
-                inputstream.close();
-
-            } catch (Exception e) {}
-            return null;
-
-        }
-        protected void onProgressUpdate(final String... progress) {
-            progressdialog.setProgress(Integer.parseInt(progress[0]));
-
-
-
-        }
-
-        @Override
-        protected void onPostExecute(String unused) {
-
-            dismissDialog(Progress_Dialog_Progress);
-
-            showAlert("1");
-        }
+public boolean checkFileExistsOrNot()
+{
+    File myFile = new File(Environment.getExternalStorageDirectory() + "/" + "SmartLibrary/book/", book_title+".pdf");
+    if (myFile.exists()) {
+        return true;
     }
-
-    private void openPDF(String filePath)
-    {
-        File pdfFile = new File(Environment.getExternalStorageDirectory(),filePath);//File path
-        if (pdfFile.exists()) //Checking if the file exists or not
-        {
-            Uri path = Uri.fromFile(pdfFile);
-            Intent objIntent = new Intent(Intent.ACTION_VIEW);
-            objIntent.setDataAndType(path, "application/pdf");
-            objIntent.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(objIntent);//Starting the pdf viewer
-        } else {
-
-            Toast.makeText(BookActivity.this, "The file not exists! ", Toast.LENGTH_SHORT).show();
-
-        }
-
+    else {
+        return false;
     }
+}
 
    
 }
