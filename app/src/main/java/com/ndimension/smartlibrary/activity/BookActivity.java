@@ -266,7 +266,7 @@ public class BookActivity extends AppCompatActivity {
                         downloadPDF(book_pdf_link);
                     }
                     else {
-                        showPdf(Environment.getExternalStorageDirectory() + "/" + "SmartLibrary/book" + "/"+book_title+".pdf");
+                        sharePdf(Environment.getExternalStorageDirectory() + "/" + "SmartLibrary/book" + "/"+book_title+".pdf");
                     }
                 }else {
                     Toast.makeText(getApplicationContext(),"Pdf Link is not found",Toast.LENGTH_SHORT).show();
@@ -274,14 +274,10 @@ public class BookActivity extends AppCompatActivity {
                 return true;
             case R.id.download:
                 SHARE_PDF_FLAG = 1;
+
                 if (!book_pdf_link.equals("")) {
-               // new PDFDownloadWithProgressDialog().execute(book_pdf_link);
-                    if (!checkFileExistsOrNot()) {
-                        downloadPDF(book_pdf_link);
-                    }
-                    else {
-                        showPdf(Environment.getExternalStorageDirectory() + "/" + "SmartLibrary/book" + "/"+book_title+".pdf");
-                    }
+                    downloadPDF(book_pdf_link);
+
                 }else {
                     Toast.makeText(getApplicationContext(),"Pdf Link is not found",Toast.LENGTH_SHORT).show();
                 }
@@ -469,11 +465,12 @@ public class BookActivity extends AppCompatActivity {
         snackbar.show();
     }
 
-    private void sharePdf(File outputFile){
+    private void sharePdf(String outputFile){
       //  Uri uri = Uri.fromFile(outputFile);
+        File file = new File(outputFile);
         Uri uri = FileProvider.getUriForFile(
                 BookActivity.this,
-                BuildConfig.APPLICATION_ID + ".provider", outputFile);
+                BuildConfig.APPLICATION_ID + ".provider", file);
 
 
         Intent share = new Intent();
@@ -496,9 +493,13 @@ public class BookActivity extends AppCompatActivity {
                 intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(intent);
             } else {
-
-                intent.setDataAndType(Uri.parse(outputFile), "application/pdf");
-                intent = Intent.createChooser(intent, "Open File");
+                File file = new File(outputFile);
+                Uri uri = Uri.fromFile(file);
+                Log.d("SoumyaURI", Uri.parse(outputFile).toString());
+                intent.setDataAndType(uri, "application/pdf");
+               // intent = Intent.createChooser(intent, "Open File");
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
@@ -612,16 +613,16 @@ public class BookActivity extends AppCompatActivity {
                         // do anything after completion
                         dismissDialog(Progress_Dialog_Progress_2);
                         if(SHARE_PDF_FLAG == 0) {
-                            // Log.d("SoumyaUri", thumbList.get(shareVideoFilePath).getImage());
 
-                            sharePdf(outputFile);
+                           // sharePdf(outputFile);
+                            sharePdf(Environment.getExternalStorageDirectory() + "/" + "SmartLibrary/book" + "/"+book_title+".pdf");
                         }else if (SHARE_PDF_FLAG == 1){
 
                             showAlert("2");
                         }else if (SHARE_PDF_FLAG == 2){
 
                             showPdf(Environment.getExternalStorageDirectory() + "/" + "SmartLibrary/book" + "/"+book_title+".pdf");
-                            //openPDF("SmartLibrary/book/"+book_title+".pdf");
+
                         }
 
                     }
