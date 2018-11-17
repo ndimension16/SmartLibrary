@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -48,6 +49,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.gun0912.tedpermission.PermissionListener;
+import com.ndimension.smartlibrary.BuildConfig;
 import com.ndimension.smartlibrary.R;
 import com.ndimension.smartlibrary.utility.ConstantClass;
 import com.ndimension.smartlibrary.utility.Pref;
@@ -277,7 +279,12 @@ public class BookActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 alertDialog.dismiss();
-                callFeedbackMethod(etFeedbackContent.getText().toString().trim());
+                if (etFeedbackContent.getText().toString().length()>0) {
+                    callFeedbackMethod(etFeedbackContent.getText().toString().trim());
+                }else {
+                    etFeedbackContent.setError("Enter Content");
+                    etFeedbackContent.requestFocus();
+                }
 
             }
         });
@@ -572,7 +579,11 @@ public class BookActivity extends AppCompatActivity {
     }
 
     private void sharePdf(File outputFile){
-        Uri uri = Uri.fromFile(outputFile);
+      //  Uri uri = Uri.fromFile(outputFile);
+        Uri uri = FileProvider.getUriForFile(
+                BookActivity.this,
+                BuildConfig.APPLICATION_ID + ".provider", outputFile);
+
 
         Intent share = new Intent();
         share.setAction(Intent.ACTION_SEND);
@@ -586,14 +597,20 @@ public class BookActivity extends AppCompatActivity {
     public void showPdf(File outputFile)
     {
 
-        PackageManager packageManager = getPackageManager();
+      /*  PackageManager packageManager = getPackageManager();
         Intent testIntent = new Intent(Intent.ACTION_VIEW);
         testIntent.setType("application/pdf");
-        List list = packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        List list = packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY);*/
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
-        Uri uri = Uri.fromFile(outputFile);
+      //  Uri uri = Uri.fromFile(outputFile);
+        Uri uri = FileProvider.getUriForFile(
+                BookActivity.this,
+                BuildConfig.APPLICATION_ID + ".provider", outputFile);
+        Log.d("SoumyaURI",uri.toString());
         intent.setDataAndType(uri, "application/pdf");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
