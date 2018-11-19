@@ -111,7 +111,7 @@
                                     <Button
                                         android:id="@+id/btnRead"
                                         android:textSize="14sp"
-                                        android:text="Reed Book"
+                                        android:text="Read Book"
                                         android:textAllCaps="false"
                                         android:textColor="@android:color/white"
                                         android:layout_marginTop="10dp"

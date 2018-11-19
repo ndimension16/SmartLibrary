@@ -1,6 +1,7 @@
 package com.ndimension.smartlibrary.activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -32,6 +33,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -308,6 +310,7 @@ public class BookActivity extends AppCompatActivity {
                     etFeedbackContent.setError("Enter Content");
                     etFeedbackContent.requestFocus();
                 }
+                hideKeyboard(view);
 
             }
         });
@@ -646,6 +649,11 @@ public boolean checkFileExistsOrNot()
         return false;
     }
 }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
    
 }

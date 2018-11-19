@@ -1,5 +1,7 @@
 package com.ndimension.smartlibrary.activity;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,8 +9,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +40,10 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etEmail,etPassword;
     private Pref pref;
     private NetworkConnectionCheck connectionCheck;
+    private TextView tvForgetPass;
+    private Dialog dialog;
+    private EditText etDialogEmail,etDialogPass;
+    private LinearLayout llDialogSubmit;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.etPassword);
 
         pref = new Pref(this);
+        tvForgetPass = findViewById(R.id.tvForgetPass);
 
         connectionCheck = new NetworkConnectionCheck(this);
     }
@@ -86,6 +97,13 @@ public class LoginActivity extends AppCompatActivity {
                    etEmail.setError("Enter Valid Email");
                    etEmail.requestFocus();
                }
+            }
+        });
+
+        tvForgetPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopup();
             }
         });
     }
@@ -164,5 +182,61 @@ public class LoginActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(jsonObjReq);
+    }
+
+    private void showPopup(){
+        dialog = new Dialog(LoginActivity.this,R.style.CustomDialogNew);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.dialog_forgot_password);
+        dialog.getWindow().getAttributes().windowAnimations=R.style.DialogAnimation2;
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        LinearLayout llCancel = (LinearLayout) dialog.findViewById(R.id.llCancel);
+        etDialogEmail=(EditText)dialog.findViewById(R.id.etDialogEmail);
+        etDialogPass = (EditText) dialog.findViewById(R.id.etDialogPass);
+        llDialogSubmit=(LinearLayout)dialog.findViewById(R.id.llDialogSubmit);
+        llDialogSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (etDialogEmail.getText().toString().length()>0){
+                    if (etDialogPass.getText().toString().length()>0){
+                        if (connectionCheck.isNetworkAvailable()) {
+                            //  callForgetPassword();
+                        }else {
+                            connectionCheck.getNetworkActiveAlert().show();
+                        }
+                        dialog.dismiss();
+                    }else {
+                        etDialogPass.setError("Enter New Password");
+                        etDialogPass.requestFocus();
+                    }
+
+                }else {
+                    etDialogEmail.setError("Enter Mobile");
+                    etDialogEmail.requestFocus();
+                }
+            }
+        });
+
+
+        llCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideKeyboard(view);
+                dialog.dismiss();
+
+
+            }
+        });
+        dialog.show();
+    }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    private void callForgetPassword(){
+
     }
 }
