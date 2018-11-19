@@ -235,6 +235,51 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void callForgetPassword(){
+        final JSONObject input = new JSONObject();
+        try {
+            input.put("email",etDialogEmail.getText().toString().trim());
+            input.put("password",etDialogPass.getText().toString().trim());
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.d("inputForgetPass",input.toString());
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please Wait..");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                ConstantClass.BASE_URL+"password/forget", input, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("responseForgetPass", response.toString());
+
+                progressDialog.hide();
+
+                if (response.optBoolean("status")){
+                    String statusCode = response.optString("statusCode");
+                    Toast.makeText(getApplicationContext(),response.optString("message"),Toast.LENGTH_SHORT).show();
+                }else {
+                    String statusCode = response.optString("statusCode");
+                    Toast.makeText(getApplicationContext(),response.optString("message"),Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                progressDialog.hide();
+            }
+        });
+
+
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(20000,
+                0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(jsonObjReq);
     }
 }
