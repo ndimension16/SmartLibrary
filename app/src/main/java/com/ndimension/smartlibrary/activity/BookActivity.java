@@ -113,6 +113,7 @@ public class BookActivity extends AppCompatActivity {
     int SHARE_PDF_FLAG = 0;
     Pref pref;
     private int progressStatus = 0;
+    String pdfName = "";
 
 
     @Override
@@ -178,6 +179,7 @@ public class BookActivity extends AppCompatActivity {
                 etContent.setText(Html.fromHtml(getIntent().getStringExtra("book_content")).toString());
                 if (!getIntent().getStringExtra("book_pdf_link").equals("")) {
                     book_pdf_link = ConstantClass.DRIVE_URL + getIntent().getStringExtra("book_pdf_link");
+
                 }
 
                 barcode_img = getIntent().getStringExtra("book_barcode_img");
