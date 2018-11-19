@@ -151,8 +151,6 @@ public class LoginActivity extends AppCompatActivity {
                         pref.saveMobile(phone);
 
 
-
-
                         Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                         startActivity(intent);
                         finish();
@@ -201,7 +199,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (etDialogEmail.getText().toString().length()>0){
                     if (etDialogPass.getText().toString().length()>0){
                         if (connectionCheck.isNetworkAvailable()) {
-                            //  callForgetPassword();
+                              callForgetPassword();
                         }else {
                             connectionCheck.getNetworkActiveAlert().show();
                         }
